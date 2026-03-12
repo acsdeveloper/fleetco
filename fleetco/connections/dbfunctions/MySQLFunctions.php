@@ -42,7 +42,7 @@ class MySQLFunctions extends DBFunctions
 		if( useMySQLiLib() && $this->conn )
 		{
 			if( $this->conn )
-				return mysqli_real_escape_string( $this->conn, $str );
+				return mysqli_real_escape_string( $this->conn, (string)($str ?? '') );
 		} 
 //	deprecated
 /*
