@@ -46,7 +46,7 @@ class MSSQLSrvConnection extends Connection
 	protected function triggerErrorMSSQL()
 	{
 		$error = $this->lastError();
-		if( !strlen($error) )
+		if( !strlen((string)$error) )
 			$this->triggerError("Udefined MSSQL Server Error");
 		else 
 			$this->triggerError($error);

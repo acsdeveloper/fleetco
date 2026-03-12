@@ -294,7 +294,7 @@ class MenuItem
 	function checkLinkShowStatus()
 	{
 		// if link external and has href
-		if ($this->linkType == "External" && strlen($this->href)>0)
+		if ($this->linkType == "External" && strlen((string)$this->href)>0)
 			return true;
 		// allways show separators
 		if ($this->linkType == "Separator")
@@ -412,7 +412,7 @@ class MenuItem
 		if( $this->color != '' )
 			$xt->assign( "item".$this->id."_menulink_style", 'style="background-color:' . $this->color . '"');
 		
-		if( strlen($this->comments) )
+		if( strlen((string)$this->comments) )
 		{
 			$xt->assign( "item".$this->id."_comments", true);
 			$xt->assign( "item".$this->id."_comments_text", $this->comments);

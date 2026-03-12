@@ -291,7 +291,7 @@ class AddPage extends RunnerPage
 	 */
 	public function process()
 	{
-		if( strlen($this->afterAdd_id) )
+		if( strlen((string)$this->afterAdd_id) )
 		{
 			$this->redirectAfterAdd();
 			return;	
@@ -591,7 +591,7 @@ class AddPage extends RunnerPage
 		$customAddError = "";
 		$ret = $this->eventsObject->CustomAdd( $this->newRecordData, $keys, $customAddError, $this->mode == ADD_INLINE, $this );
 					
-		if( strlen($customAddError) > 0 )
+		if( strlen((string)$customAddError) > 0 )
 		{
 			$this->insertedSuccessfully = false;
 			$this->setMessage( $customAddError );
@@ -1151,7 +1151,7 @@ class AddPage extends RunnerPage
 			foreach( $this->addFields as $f )
 			{				
 				$defaultValue = GetDefaultValue($f, PAGE_ADD);
-				if( strlen($defaultValue) )
+				if( strlen((string)$defaultValue) )
 					$this->defvalues[ $f ] = $defaultValue;	
 			}
 		}
@@ -1575,7 +1575,7 @@ class AddPage extends RunnerPage
 	public function checkIfToAddOwnerIdValue( $ownerField, $currentValue )
 	{
 		return $this->pSet->getOriginalTableName() == $this->pSet->getOwnerTable( $ownerField ) && !$this->isAutoincPrimaryKey( $ownerField ) 
-			&& ( !CheckTablePermissions($this->tName, 'M') || !strlen($currentValue) );
+			&& ( !CheckTablePermissions($this->tName, 'M') || !strlen((string)$currentValue) );
 	}
 
 	/**

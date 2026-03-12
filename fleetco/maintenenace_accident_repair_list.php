@@ -250,7 +250,7 @@ $xt = new Xtempl( $mode != LIST_SIMPLE ); //#9607 1. Temporary fix
 
 $options["pageType"] = PAGE_LIST;
 $options["id"] = postvalue("id") ? postvalue("id") : 1;
-$options["flyId"] = postvalue("recordId") + 0;
+$options["flyId"] = (int)postvalue("recordId");
 $options["mode"] = $mode;
 $options['xt'] = &$xt;
 $options['mainMasterPageType'] = postvalue("mainmasterpagetype");
@@ -259,7 +259,7 @@ $options["masterTable"] = postvalue("mastertable");
 $options["masterId"] = postvalue("masterid");
 $options["firstTime"] = postvalue("firsttime");
 
-if( $mode == LIST_DASHBOARD && postvalue("nodata") && strlen($options["masterTable"]) )
+if( $mode == LIST_DASHBOARD && postvalue("nodata") && strlen((string)$options["masterTable"]) )
 	$options["showNoData"] = true;
 
 if( $mode != LIST_LOOKUP )

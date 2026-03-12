@@ -587,7 +587,7 @@ class ExportPage extends RunnerPage
 					continue;
 			
 				echo "<td>";
-				if( strlen($data["totalsType"]) )
+				if( strlen((string)$data["totalsType"]) )
 				{
 					if( $data["totalsType"] == "COUNT" )
 						echo mlang_message("COUNT").": ";

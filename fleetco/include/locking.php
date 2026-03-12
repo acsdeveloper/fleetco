@@ -40,7 +40,7 @@ class oLocking
 		$skeys = "";
 		foreach($keys as $ind=>$val)
 		{
-			if(strlen($skeys))
+			if(strlen((string)$skeys))
 				$skeys.="&";
 			$skeys.=rawurlencode($val);
 		}
@@ -100,7 +100,7 @@ class oLocking
 		$skeys="";
 		foreach($keys as $ind=>$val)
 		{
-			if(strlen($skeys))
+			if(strlen((string)$skeys))
 				$skeys.="&";
 			$skeys.=rawurlencode($val);
 		}
@@ -118,7 +118,7 @@ class oLocking
 		$skeys="";
 		foreach($keys as $ind=>$val)
 		{
-			if(strlen($skeys))
+			if(strlen((string)$skeys))
 				$skeys.="&";
 			$skeys.=rawurlencode($val);
 		}
@@ -218,7 +218,7 @@ class oLocking
 		$page=GetTableLink(GetTableURL($strtable), "edit");
 		$skeys="";
 		foreach($keys as $ind=>$val){
-			if(strlen($skeys))
+			if(strlen((string)$skeys))
 				$skeys.="&";
 			$skeys.=rawurlencode($val);
 		}
@@ -252,7 +252,7 @@ class oLocking
 		$skeys = "";
 		foreach($keys as $ind=>$val)
 		{
-			if(strlen($skeys))
+			if(strlen((string)$skeys))
 				$skeys .= "&";
 			$skeys .= rawurlencode($val);
 		}

@@ -133,7 +133,7 @@ class OrderClause
 	 */
 	function adjustFiledList()
 	{
-		if( !strlen($_SESSION[$this->listObject->sessionPrefix."_order"]) ) 
+		if( !strlen((string)$_SESSION[$this->listObject->sessionPrefix."_order"]) ) 
 			$this->buildFieldsArrayForSortOrder();
 		
 		if( @$_SESSION[$this->listObject->sessionPrefix."_orderby"] ) 

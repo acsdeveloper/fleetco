@@ -68,7 +68,7 @@ class TLayout
 		if( $this->version == BOOTSTRAP_LAYOUT )
 		{
 			$files[] = "include/bootstrap/css/bootstrap.min.css";
-			if(strlen($this->bootstrapTheme))
+			if(strlen((string)$this->bootstrapTheme))
 				$files[] = "styles/bootstrap/".$this->bootstrapTheme."/css/bootstrap-theme.min.css";
 			else
 				$files[] = "include/bootstrap/css/bootstrap-theme.min.css";
@@ -79,7 +79,7 @@ class TLayout
 			$files[] = "styles/bs".$suffix.".css";
 
 			// tweaks.css must follow bs.css
-			if(strlen($this->bootstrapTheme))
+			if(strlen((string)$this->bootstrapTheme))
 			{
 				if( file_exists( getabspath( "styles/bootstrap/".$this->bootstrapTheme."/css/tweaks".$suffix.".css" ) ) )
 					$files[] = "styles/bootstrap/".$this->bootstrapTheme."/css/tweaks".$suffix.".css";

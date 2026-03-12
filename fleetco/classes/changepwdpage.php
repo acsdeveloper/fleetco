@@ -58,7 +58,7 @@ class ChangePasswordPage extends RunnerPage
 	protected function setReferer()
 	{
 		$referer = @$_SERVER["HTTP_REFERER"] != "" 
-				&& strpos($_SERVER["HTTP_REFERER"], GetTableLink("changepwd")) != strlen($_SERVER["HTTP_REFERER"]) - strlen(GetTableLink("changepwd"))
+				&& strpos($_SERVER["HTTP_REFERER"], GetTableLink("changepwd")) != strlen((string)$_SERVER["HTTP_REFERER"]) - strlen(GetTableLink("changepwd"))
 				? $_SERVER["HTTP_REFERER"] : ""; 
 
 		if(!isset($_SESSION["changepwd_referer"]))

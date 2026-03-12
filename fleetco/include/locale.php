@@ -98,7 +98,7 @@ function db2time($str)
 //	timestamp
 	{
 		$havedate=1;
-		$len=strlen($str);
+		$len=strlen((string)$str);
 		if($len>=10)
 		  $havetime=1;
 		switch($len)

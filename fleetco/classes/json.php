@@ -207,7 +207,7 @@ class Services_JSON
             return mb_convert_encoding($utf8, 'UTF-16', 'UTF-8');
         }
 
-        switch(strlen($utf8)) {
+        switch(strlen((string)$utf8)) {
             case 1:
                 // this case should never be reached, because we are in ASCII range
                 // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
@@ -263,7 +263,7 @@ class Services_JSON
             case 'string':
                 // STRINGS ARE EXPECTED TO BE IN ASCII OR UTF-8 FORMAT
                 $ascii = '';
-                $strlen_var = strlen($var);
+                $strlen_var = strlen((string)$var);
 
                /*
                 * Iterate over every character in the string,
@@ -525,7 +525,7 @@ class Services_JSON
                     $delim = substr($str, 0, 1);
                     $chrs = substr($str, 1, -1);
                     $utf8 = '';
-                    $strlen_chrs = strlen($chrs);
+                    $strlen_chrs = strlen((string)$chrs);
 
                     for ($c = 0; $c < $strlen_chrs; ++$c) {
 
@@ -652,7 +652,7 @@ class Services_JSON
 
                     //print("\nparsing {$chrs}\n");
 
-                    $strlen_chrs = strlen($chrs);
+                    $strlen_chrs = strlen((string)$chrs);
 
                     for ($c = 0; $c <= $strlen_chrs; ++$c) {
 

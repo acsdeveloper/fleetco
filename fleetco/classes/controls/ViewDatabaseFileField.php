@@ -14,7 +14,7 @@ class ViewDatabaseFileField extends ViewControl
 		else 
 			$fileName = "file.bin";
 		
-		if( strlen($data[$this->field]) ) 
+		if( strlen((string)$data[$this->field]) ) 
 		{
 			$value = "<a href='".GetTableLink("getfile", "", "table=".GetTableURL($this->container->pSet->_table)."&filename=".rawurlencode($fileName)."&field=".rawurlencode($this->field).$keylink)."'>";
 			$value.= runner_htmlspecialchars($fileName);

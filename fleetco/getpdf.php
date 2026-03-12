@@ -40,7 +40,7 @@ $value = @file_get_contents($file);
 
 header("Content-Type: application/pdf");
 header("Cache-Control: private");
-SendContentLength(strlen($value));
+SendContentLength(strlen((string)$value));
 echoBinary($value);
 
 ?>

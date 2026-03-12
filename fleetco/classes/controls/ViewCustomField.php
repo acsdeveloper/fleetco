@@ -52,10 +52,10 @@ class ViewCustomField extends ViewControl
 				$valueArr = $this->getSplitStringWithCapturedDelimiters($tagPattern, $value); 
 				foreach($valueArr as $item)
 				{
-					if( !strlen($item) )
+					if( !strlen((string)$item) )
 						continue;
 					//the tag inside a tag's attribute was matched
-					if( $item[0] == "<" || $item[ strlen($item) - 1 ] == ">" || $replaced )
+					if( $item[0] == "<" || $item[ strlen((string)$item) - 1 ] == ">" || $replaced )
 					{
 						$res.= $item;
 						continue;
@@ -80,7 +80,7 @@ class ViewCustomField extends ViewControl
 			{
 				if( trim($item) )
 				{
-					if($item[0] != '<' && $item[ strlen($item) - 1 ] != '>' )
+					if($item[0] != '<' && $item[ strlen((string)$item) - 1 ] != '>' )
 					{
 						//remove tag fragments						
 						$newItem = preg_replace("/^.*>|<.*$/", '', $item);

@@ -32,7 +32,7 @@ function str_format_number($val,$valDigits = false)
     $grouping=explode(";",$locale_info["LOCALE_SGROUPING"]);
 	if(count($grouping) && $grouping[0])
 	{
-		$ptr=strlen($out);
+		$ptr=strlen((string)$out);
 		for($gi=0;$gi<count($grouping);$gi++)
 		{
 			if(!$grouping[$gi])
@@ -54,7 +54,7 @@ function str_format_number($val,$valDigits = false)
         $fmul*=10;
       $sfrac=round($frac*$fmul);
 	  //$sfrac=mysprintf("%.0f",array($frac));
-	  while(strlen($sfrac)<$iDigits)
+	  while(strlen((string)$sfrac)<$iDigits)
 	    $sfrac="0".$sfrac;
 	  $out.=$locale_info["LOCALE_SDECIMAL"].$sfrac;
     }
@@ -105,7 +105,7 @@ function str_format_currency($val)
     $grouping=explode(";",$locale_info["LOCALE_SMONGROUPING"]);
 	if(count($grouping) && $grouping[0])
 	{
-		$ptr=strlen($out);
+		$ptr=strlen((string)$out);
 		for($gi=0;$gi<count($grouping);$gi++)
 		{
 			if(!$grouping[$gi])
@@ -127,7 +127,7 @@ function str_format_currency($val)
         $fmul*=10;
       $frac=round($frac*$fmul);
 	  $sfrac=mysprintf("%d",array($frac));
-	  while(strlen($sfrac)<$locale_info["LOCALE_ICURRDIGITS"])
+	  while(strlen((string)$sfrac)<$locale_info["LOCALE_ICURRDIGITS"])
 	    $sfrac="0".$sfrac;
 	  $out.=$locale_info["LOCALE_SMONDECIMALSEP"].$sfrac;
     }
@@ -241,7 +241,7 @@ function format_datetime_custom($time,$format)
 	$subst["h"]=$hour12;
 	if($am)
 	{
-		if ( strlen($locale_info["LOCALE_S1159"]) !== 0 )
+		if ( strlen((string)$locale_info["LOCALE_S1159"]) !== 0 )
 		{
 			$subst["tt"]= $locale_info["LOCALE_S1159"];
 			$subst["t"]=substr($locale_info["LOCALE_S1159"],0,1);			
@@ -254,7 +254,7 @@ function format_datetime_custom($time,$format)
 	}
 	else
 	{
-		if ( strlen($locale_info["LOCALE_S2359"]) !== 0 )
+		if ( strlen((string)$locale_info["LOCALE_S2359"]) !== 0 )
 		{
 			$subst["tt"]= $locale_info["LOCALE_S2359"];
 			$subst["t"]=substr($locale_info["LOCALE_S2359"],0,1);			
@@ -267,7 +267,7 @@ function format_datetime_custom($time,$format)
 	}
 	$out=$format;
 	$inquot=0;
-	while($i<strlen($out))
+	while($i<strlen((string)$out))
 	{
 		if($out[$i]=="'")
 		{
@@ -278,10 +278,10 @@ function format_datetime_custom($time,$format)
 		else if(!$inquot)
 		{
 			foreach($subst as $key=>$value)
-				if(substr($out,$i,strlen($key))==$key)
+				if(substr($out,$i,strlen((string)$key))==$key)
 				{
-					$out=substr($out,0,$i).$value.substr($out,strlen($key)+$i);
-					$i+=strlen($value)-1;
+					$out=substr($out,0,$i).$value.substr($out,strlen((string)$key)+$i);
+					$i+=strlen((string)$value)-1;
 					break;
 				}
 		}
@@ -394,9 +394,9 @@ function localtime2db($strtime)
 	$amRegular = "a\.?m\.?";
 	$pmRegular = "p\.?m\.?";
 
-	if( strlen($amstr) )
+	if( strlen((string)$amstr) )
 		$amRegular .= "|".$amstr;
-	if ( strlen($pmstr) )
+	if ( strlen((string)$pmstr) )
 		$pmRegular .= "|".$pmstr;
 
 	$isAm = preg_match("/(" . $amRegular . ")/isU", $strtime);
@@ -458,9 +458,9 @@ function localdatetime2db($strdatetime,$format="")
 	$amRegular = "a\.?m\.?";
 	$pmRegular = "p\.?m\.?";
 
-	if( strlen($amstr) )
+	if( strlen((string)$amstr) )
 		$amRegular .= "|".$amstr;
-	if ( strlen($pmstr) )
+	if ( strlen((string)$pmstr) )
 		$pmRegular .= "|".$pmstr;
 
 	$isAm = preg_match("/(" . $amRegular . ")/isU", $strdatetime);
@@ -557,7 +557,7 @@ function parsenumbers($str)
 	$i=0;
 	$num=0;
 	$pos=0;
-	while($i<strlen($str))
+	while($i<strlen((string)$str))
 	{
 		if(is_numeric(substr($str,$i,1)) && !$num)
 		{
@@ -977,7 +977,7 @@ function GetLongDateFormat()
 	for($i=0;true;$i++)
 	{
 		$c="";
-		if($i<strlen($format))
+		if($i<strlen((string)$format))
 			$c=substr($format,$i,1);
 		if($dstart>=0 && $c!='d')
 		{
@@ -1001,7 +1001,7 @@ function GetLongDateFormat()
 			if($mindex<0 && $c=='M')
 				$mindex=$i;
 		}
-		if($i>=strlen($format))
+		if($i>=strlen((string)$format))
 			break;
 	}
 	if($dindex<0 || $mindex<0 || $yindex<0)

@@ -408,7 +408,7 @@ $tdatainventorymaster_pricing[".warnLeavingPages"] = true;
 
 
 $tstrOrderBy = "ORDER BY creategrn.ID DESC";
-if(strlen($tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
+if(strlen((string)$tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
 	$tstrOrderBy = "order by ".$tstrOrderBy;
 $tdatainventorymaster_pricing[".strOrderBy"] = $tstrOrderBy;
 

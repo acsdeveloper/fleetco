@@ -339,8 +339,8 @@ switch ($requestAction) {
 				
     			//set start and end based on range (if set), else set defaults
 			    //also check for invalid ranges.
-    			$seek_end = (strlen($seek_end) == 0) ? ($fsize - 1) : min(abs(intval($seek_end)),($fsize - 1));
-			    $seek_start = (strlen($seek_start) == 0 || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)),0);
+    			$seek_end = (strlen((string)$seek_end) == 0) ? ($fsize - 1) : min(abs(intval($seek_end)),($fsize - 1));
+			    $seek_start = (strlen((string)$seek_start) == 0 || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)),0);
 				
 				//	print headers
 				if ($seek_start > 0 || $seek_end < ($fsize - 1))

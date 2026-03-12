@@ -26,7 +26,7 @@ class SearchControl
 	 */		
 	var $controlsContainer;
 		
-	function __construct($id, $tName = '', &$searchClauseObj, &$pageObj)
+	function __construct($id, $tName, &$searchClauseObj, &$pageObj)
 	{
 		$this->tName = $tName;
 		
@@ -155,7 +155,7 @@ class SearchControl
 	 * @param Boolean isCached 			Indicator showing if the search control is cached
 	 * @return Array || Boolean
 	 */	
-	function getSecCtrlParamsArr($fName, $recId, $fieldNum = 0, $value, $opt, $renderHidden = false, $isCached=true) 
+	function getSecCtrlParamsArr($fName, $recId, $fieldNum, $value, $opt, $renderHidden = false, $isCached=true)
 	{
 		$fType = $this->pSet->getEditFormat($fName);	
 		
@@ -223,7 +223,7 @@ class SearchControl
 	 * @param Boolean both		It indicates if the control needs 'NOT'-options
 	 * @return String
 	 */
-	function getCtrlSearchType($fName, $recId, $fieldNum=0, $selOpt, $not, $flexible, $both) 
+	function getCtrlSearchType($fName, $recId, $fieldNum, $selOpt, $not, $flexible, $both)
 	{
 		$emptyOption = $selOpt == EMPTY_SEARCH || $selOpt == NOT_EMPTY; 
 		$visibility = !$flexible || $this->getSrchPanelAttrs['ctrlTypeComboStatus'] || $emptyOption ? '' : 'style="display: none;"';

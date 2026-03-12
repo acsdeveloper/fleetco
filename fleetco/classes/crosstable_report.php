@@ -116,7 +116,7 @@ class CrossTableReport
 		$this->setDbConnection();
 		
 		$this->shortTableName = GetTableURL($this->tableName);
-		if( strlen($this->shortTableName) == 0 )
+		if( strlen((string)$this->shortTableName) == 0 )
 			$this->shortTableName = $this->tableName;
 			
 		$this->pSet = new ProjectSettings($this->tableName, PAGE_REPORT);
@@ -138,7 +138,7 @@ class CrossTableReport
 
 
 		$this->dataField = $this->getDataField( $_SESSION[$this->sessionPrefix."_field"] );
-		if( !strlen($this->dataField) )
+		if( !strlen((string)$this->dataField) )
 			$this->dataField = $_SESSION['webreports']['group_fields'][0]["name"];
 		
 		$this->initDataFieldSettings();
@@ -1042,9 +1042,9 @@ class CrossTableReport
 		{
 			$dvalue = substr($value, 0, 4).'-'.substr($value, 4, 2).'-'.substr($value, 6, 2);
 			
-			if( strlen($value) == 10 )
+			if( strlen((string)$value) == 10 )
 				$dvalue.=" ".substr($value, 8, 2)."00:00";
-			elseif( strlen($value) == 12 )
+			elseif( strlen((string)$value) == 12 )
 				$dvalue.=" ".substr($value, 8, 2).":".substr($value, 10, 2).":00";
 			
 			$tm = db2time($dvalue);

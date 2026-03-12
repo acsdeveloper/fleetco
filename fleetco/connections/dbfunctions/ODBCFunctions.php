@@ -33,7 +33,7 @@ class ODBCFunctions extends DBFunctions
 	 */	
 	public function addSlashesBinary( $str )
 	{
-		if( !strlen($str) )
+		if( !strlen((string)$str) )
 			return "''";
 		return "0x".bin2hex($str);
 	}

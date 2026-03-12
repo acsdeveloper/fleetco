@@ -123,7 +123,7 @@ class ListPage_Lookup extends ListPage_Embed
 			$this->lookupSelectField = $this->listFields[0]['fName'];
 		
 		$orderByField = $this->lookupPSet->getLookupOrderBy( $this->lookupField );		
-		if( strlen($orderByField) )
+		if( strlen((string)$orderByField) )
 		{
 			// adjust the ORDER BY clause according to the main lookup settings
 //			$this->gstrOrderBy = " ORDER BY ".$this->connection->addTableWrappers( $this->tName ).".".$this->connection->addFieldWrappers($orderByField);
@@ -194,7 +194,7 @@ class ListPage_Lookup extends ListPage_Embed
 	{
 		$strLookupWhere = GetLWWhere($this->lookupField, $this->lookupPageType, $this->lookupTable);
 		
-		if( strlen($strLookupWhere) )
+		if( strlen((string)$strLookupWhere) )
 			$this->strWhereClause = whereAdd($this->strWhereClause, $strLookupWhere);		
 		
 		if( !$this->lookupPSet->useCategory($this->lookupField) ) 
@@ -391,7 +391,7 @@ class ListPage_Lookup extends ListPage_Embed
 	{
 		global $strTableName;
 		
-		if( !strlen($table) )	
+		if( !strlen((string)$table) )	
 			$table = $strTableName;
 		
 		$strPerm = GetUserPermissions($table);

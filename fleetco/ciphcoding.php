@@ -176,11 +176,11 @@ if(postvalue("ciphcoding"))
 					$value = $data[ $field ];
 					$flagCiph = 0;
 					//$flagCiph = 2 - not cipherer, $flagCiph = 1 - cipherer, $flagCiph = 0 - empty
-					if(is_string($value) and strlen($value) != 0 )
+					if(is_string($value) and strlen((string)$value) != 0 )
 					{
 						if($_connection->isEncryptionByPHPEnabled())
 						{
-							if(strlen($value) % 2 > 0 || preg_match ("/[^0-9a-f]/", $value) == 1)
+							if(strlen((string)$value) % 2 > 0 || preg_match ("/[^0-9a-f]/", $value) == 1)
 								$flagCiph = 2;
 							else
 								$flagCiph = 1;
@@ -189,7 +189,7 @@ if(postvalue("ciphcoding"))
 						{
 							if( $_connection->dbType == nDATABASE_MySQL	)
 							{
-								if(strlen($value) % 2 > 0 || preg_match ("/[^0-9A-F]/", $value) == 1)
+								if(strlen((string)$value) % 2 > 0 || preg_match ("/[^0-9A-F]/", $value) == 1)
 									$flagCiph = 2;
 								else
 									$flagCiph = 1;
@@ -197,7 +197,7 @@ if(postvalue("ciphcoding"))
 							
 							if( $_connection->dbType ==  nDATABASE_MSSQLServer	)
 							{
-								if(ord(substr($value,0,1))!=1 || strlen($value)>1)
+								if(ord(substr($value,0,1))!=1 || strlen((string)$value)>1)
 									$flagCiph = 2;
 								else
 									$flagCiph = 1;
@@ -205,7 +205,7 @@ if(postvalue("ciphcoding"))
 							
 							if( $_connection->dbType == nDATABASE_PostgreSQL	)
 							{							
-								if(strlen($value)<24 || substr($value,0,24)!="\\303\\015\\004\\007\\003\\002")
+								if(strlen((string)$value)<24 || substr($value,0,24)!="\\303\\015\\004\\007\\003\\002")
 									$flagCiph = 2;
 								else
 									$flagCiph = 1;
@@ -290,30 +290,30 @@ if(postvalue("ciphcoding"))
 						$value = $data[ $field ];						
 						
 						$flagCiph = 0;
-						if( is_string($value) and strlen($value) != 0 )
+						if( is_string($value) and strlen((string)$value) != 0 )
 						{
 							if($_connection->isEncryptionByPHPEnabled())
 							{
-								if((strlen($value) % 2 > 0 || preg_match ("/[^0-9a-f]/", $value) == 1) && $ciphcoding=="selected" || $ciphcoding=="all")
+								if((strlen((string)$value) % 2 > 0 || preg_match ("/[^0-9a-f]/", $value) == 1) && $ciphcoding=="selected" || $ciphcoding=="all")
 									$flagCiph = 2;
 							}
 							else
 							{
 								if( $_connection->dbType ==  nDATABASE_MySQL )
 								{
-									if((strlen($value) % 2 > 0 || preg_match ("/[^0-9A-F]/", $value) == 1) && $ciphcoding=="selected" || $ciphcoding=="all")
+									if((strlen((string)$value) % 2 > 0 || preg_match ("/[^0-9A-F]/", $value) == 1) && $ciphcoding=="selected" || $ciphcoding=="all")
 										$flagCiph = 2;
 								}
 								
 								if( $_connection->dbType ==  nDATABASE_MSSQLServer )
 								{								
-									if((ord(substr($value,0,1))!=1 || strlen($value)>1) && $ciphcoding=="selected" || $ciphcoding=="all")
+									if((ord(substr($value,0,1))!=1 || strlen((string)$value)>1) && $ciphcoding=="selected" || $ciphcoding=="all")
 										$flagCiph = 2;
 								}
 
 								if( $_connection->dbType ==  nDATABASE_PostgreSQL )
 								{									
-									if((strlen($value)<24 || substr($value,0,24)!="\\303\\015\\004\\007\\003\\002") && $ciphcoding=="selected" || $ciphcoding=="all")
+									if((strlen((string)$value)<24 || substr($value,0,24)!="\\303\\015\\004\\007\\003\\002") && $ciphcoding=="selected" || $ciphcoding=="all")
 										$flagCiph = 2;
 
 								}
@@ -327,7 +327,7 @@ if(postvalue("ciphcoding"))
 							
 							if( $flagCiph == 2 )
 							{
-								if( strlen($cipherer_update) > 0 )
+								if( strlen((string)$cipherer_update) > 0 )
 									$cipherer_update.= ", ";
 									
 								if( $_connection->isEncryptionByPHPEnabled() )

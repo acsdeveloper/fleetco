@@ -382,7 +382,7 @@ else
 	{
 		$strSQL .= $lookupConnection->addFieldWrappers( $autoCompleteFields[$i]['lookupF'] ).', ';
 	}
-	$strSQL = substr($strSQL, 0, strlen($strSQL)-2);
+	$strSQL = substr($strSQL, 0, strlen((string)$strSQL)-2);
 	
 	$strSQL .= " FROM ".$lookupConnection->addTableWrappers($lookupTable);
 	$linkFieldName = $cipherer->GetLookupFieldName( $lookupConnection->addFieldWrappers($linkFieldName), $mainField );

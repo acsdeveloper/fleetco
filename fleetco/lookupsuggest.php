@@ -227,7 +227,7 @@ if( $isExistParent && $gSettings->useCategory($lookupField) )
 	}
 }
 
-if( strlen($lookupOrderBy) )
+if( strlen((string)$lookupOrderBy) )
 {
 	$lookupOrderBy = $lookupConnection->addFieldWrappers($lookupOrderBy);
 	if( $gSettings->isLookupDesc($lookupField) )
@@ -237,7 +237,7 @@ if( strlen($lookupOrderBy) )
 if($LookupType == LT_QUERY)
 {
 	$LookupSQL = $lookupQueryObj->toSql(whereAdd($lookupQueryObj->m_where->toSql($lookupQueryObj), $strLookupWhere),
-		strlen($lookupOrderBy) ? ' ORDER BY '.$lookupOrderBy : null);
+		strlen((string)$lookupOrderBy) ? ' ORDER BY '.$lookupOrderBy : null);
 }
 else
 {

@@ -111,7 +111,7 @@ class ViewLookupWizardField extends ViewControl
 		{
 			foreach($values as $val) 
 			{
-				if( strlen($val) && !is_numeric($val) )
+				if( strlen((string)$val) && !is_numeric($val) )
 				{
 					$numeric = false;
 					break;
@@ -124,7 +124,7 @@ class ViewLookupWizardField extends ViewControl
 		$listValues = array();	
 		foreach($values as $val)
 		{
-			if( $numeric && !strlen($val) )
+			if( $numeric && !strlen((string)$val) )
 				continue;
 
 			if( $numeric )
@@ -154,7 +154,7 @@ class ViewLookupWizardField extends ViewControl
 		{
 			$inWhere = RunnerPage::_getFieldSQLDecrypt( $this->linkFieldName, $this->lookupConnection, $this->lookupPSet, $this->cipherer )
 				." in (".$in.")";
-			if( strlen($where) )
+			if( strlen((string)$where) )
 				$inWhere.=" and (".$where.")";
 				
 			$LookupSQL = $this->lookupQueryObj->toSql(whereAdd($this->lookupQueryObj->m_where->toSql($this->lookupQueryObj), $inWhere));
@@ -162,7 +162,7 @@ class ViewLookupWizardField extends ViewControl
 		else
 		{
 			$LookupSQL = $this->LookupSQL.$this->lookupConnection->addFieldWrappers($this->pSet->getLinkField($this->field))." in (".$in.")";
-			if( strlen($where) ) 
+			if( strlen((string)$where) ) 
 				$LookupSQL.=" and (".$where.")";
 		}
 		
@@ -184,7 +184,7 @@ class ViewLookupWizardField extends ViewControl
 		if( $this->nLookupType == LT_QUERY )
 		{
 			$strWhere = GetFullFieldName($this->linkFieldName, $this->lookupTable, false)." = " . $strdata;
-			if( strlen($where) )
+			if( strlen((string)$where) )
 				$strWhere.= " and (".$where.")";
 				
 			$LookupSQL = $this->lookupQueryObj->toSql(whereAdd($this->lookupQueryObj->m_where->toSql($this->lookupQueryObj), $strWhere));
@@ -192,7 +192,7 @@ class ViewLookupWizardField extends ViewControl
 		else
 		{
 			$strWhere = $this->lookupConnection->addFieldWrappers($this->pSet->getLinkField($this->field))." = " . $strdata;
-			if( strlen($where) )
+			if( strlen((string)$where) )
 				$strWhere.= " and (".$where.")";
 				
 			$LookupSQL = $this->LookupSQL.$strWhere;
@@ -220,7 +220,7 @@ class ViewLookupWizardField extends ViewControl
 	protected function getMultiselectLookupValues( $value )
 	{
 		$in = $this->getDbPreparedValuesList( $value ); 
-		if( !strlen($in) )
+		if( !strlen((string)$in) )
 			return array( $value );
 		 
 		if( count($this->resolvedLookupValues[ $value ]) )
@@ -294,7 +294,7 @@ class ViewLookupWizardField extends ViewControl
 	public function showDBValue(&$data, $keylink)
 	{
 		$value = $data[ $this->field ];
-		if( !strlen($value) )
+		if( !strlen((string)$value) )
 			return "";
 
 		$outValues = array();
@@ -326,7 +326,7 @@ class ViewLookupWizardField extends ViewControl
 	public function getTextValue(&$data)
 	{
 		$value = $data[ $this->field ];
-		if( !strlen($value) )
+		if( !strlen((string)$value) )
 			return "";
 			
 		$textValues = array();

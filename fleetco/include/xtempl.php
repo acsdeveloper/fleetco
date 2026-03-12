@@ -54,7 +54,7 @@ class XTempl extends XTempl_Base
 		global $strTableName, $globalEvents;
 		if($this->eventsObject)
 			$eventObj = &$this->eventsObject;
-		elseif(strlen($strTableName))
+		elseif(strlen((string)$strTableName))
 			$eventObj = getEventObject($strTableName);
 		else
 			$eventObj = &$globalEvents;
@@ -111,7 +111,7 @@ class XTempl extends XTempl_Base
 			$key=1;
 			foreach($varparams as $val)
 			{
-				if( strlen($val) )
+				if( strlen((string)$val) )
 					$params["custom".($key++)] = $val;
 			}
 			$func = $var["func"];
@@ -125,7 +125,7 @@ class XTempl extends XTempl_Base
 			$key=1;
 			foreach($varparams as $val)
 			{
-				if( strlen($val) )
+				if( strlen((string)$val) )
 					$params["custom".($key++)] = $val;
 			}
 			$method = $var["method"];

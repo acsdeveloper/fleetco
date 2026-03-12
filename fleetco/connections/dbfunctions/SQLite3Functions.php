@@ -34,7 +34,7 @@ class SQLite3Functions extends DBFunctions
 	 */			
 	public function addSlashesBinary( $str )
 	{
-		if( !strlen($str) )
+		if( !strlen((string)$str) )
 			return "x''";
 		return "x'".bin2hex($str)."'";
 	}

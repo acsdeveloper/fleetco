@@ -1910,7 +1910,7 @@ class ProjectSettings
 			$path = GetUploadFolderExpression($field, $fileData);
 		else
 			$path = $this->getFieldData($field, "UploadFolder");
-				if(strlen($path) && substr($path,strlen($path)-1) != "/")
+				if(strlen((string)$path) && substr($path,strlen((string)$path)-1) != "/")
 			$path.="/";
 		return $path;
 	}
@@ -1926,7 +1926,7 @@ class ProjectSettings
 			$path = $this->getUploadFolder($field, $fileData);
 		else
 			$path = getabspath($this->getUploadFolder($field, $fileData));
-				if(strlen($path) && substr($path,strlen($path)-1) != "/")
+				if(strlen((string)$path) && substr($path,strlen((string)$path)-1) != "/")
 			$path.="/";
 		return $path;
 	}
@@ -2288,7 +2288,7 @@ class ProjectSettings
 	{
 		global $menuAssignments;
 		$menuId = $id;
-		$isho = strlen($horizontal) > 0 ? "1" : "0";
+		$isho = strlen((string)$horizontal) > 0 ? "1" : "0";
 		foreach($menuAssignments as $m)
 		{
 			if($m["page"] == $page && $m["id"] == $menuId && $isho == $m["horizontal"])
@@ -2301,7 +2301,7 @@ class ProjectSettings
 	{
 		global $menuStyles;
 		$menuId = $id;
-		$isho = (bool)strlen($horizontal);
+		$isho = (bool)strlen((string)$horizontal);
 		foreach($menuStyles as $m)
 		{
 			if($m["page"] == $page && $m["id"] == $menuId && $isho == (bool)$m["horizontal"])

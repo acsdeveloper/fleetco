@@ -616,7 +616,7 @@ $tdatacreategrn_disposal_rebuild[".warnLeavingPages"] = true;
 
 
 $tstrOrderBy = "ORDER BY CurrentStock DESC";
-if(strlen($tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
+if(strlen((string)$tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
 	$tstrOrderBy = "order by ".$tstrOrderBy;
 $tdatacreategrn_disposal_rebuild[".strOrderBy"] = $tstrOrderBy;
 

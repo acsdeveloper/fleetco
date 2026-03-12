@@ -79,7 +79,7 @@ class Security
 			else
 			{
 				$query .= rawurlencode($key);
-				if( strlen($value) )
+				if( strlen((string)$value) )
 					$query .= "=" . rawurlencode($value);
 			}			
 		}

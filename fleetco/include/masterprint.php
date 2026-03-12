@@ -65,11 +65,11 @@ function DisplayMasterTableInfoForPrint_##@TABLE.strShortTableName##($params)
 		return;
 	
 	$str = SecuritySQL("Export", $tName );
-	if( strlen($str) )
+	if( strlen((string)$str) )
 		$where.= " and ".$str;
 	
 	$strWhere = whereAdd( $masterQuery->m_where->toSql($masterQuery), $where );
-	if( strlen($strWhere) )
+	if( strlen((string)$strWhere) )
 		$strWhere= " where ".$strWhere." ";
 		
 	$strSQL = $masterQuery->HeadToSql().' '.$masterQuery->FromToSql().$strWhere.$masterQuery->TailToSql();

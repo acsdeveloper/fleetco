@@ -248,7 +248,7 @@ class ViewControl
 	 */
 	protected function textNeedsTruncating($value, $cNumberOfChars) 
 	{
-		return !$this->isUsedForFilter && !$this->container->fullText && $cNumberOfChars > 0 && runner_strlen($value) > $cNumberOfChars;
+		return !$this->isUsedForFilter && !$this->container->fullText && $cNumberOfChars > 0 && runner_strlen((string)$value) > $cNumberOfChars;
 	}
 	
 	/**
@@ -458,7 +458,7 @@ class ViewControl
 	{
 		$resArray = array();
 		
-		if( !strlen($str) )
+		if( !strlen((string)$str) )
 			return $resArray ;
 		
 		if( !preg_match_all($pattern, $str, $matches) ) 
@@ -616,7 +616,7 @@ class ViewControl
 				return $this->addHighlightingSpan($truncatedValue); 
 
 			case 'Starts with':
-				if( strlen($searchWordEncoded) > strlen($truncatedValue) )
+				if( strlen((string)$searchWordEncoded) > strlen((string)$truncatedValue) )
 					return $this->addHighlightingSpan($truncatedValue);  
 					
 				return preg_replace('/^'.preg_quote($searchWordEncoded,"/").'/i', $highlighting, $truncatedValue);	
@@ -626,8 +626,8 @@ class ViewControl
 				
 				$firstPos = $this->getFistOccurencePosition($value, $searchWord, $searchWordEncoded);
 				$lastPos = $this->getLastOccurencePosition($value, $searchWord, $searchWordEncoded);
-				$searchWordEncodedLen = runner_strlen($searchWordEncoded);
-				$truncLen = runner_strlen($truncatedValue);
+				$searchWordEncodedLen = runner_strlen((string)$searchWordEncoded);
+				$truncLen = runner_strlen((string)$truncatedValue);
 				
 				$pattern = '/('.$this->getSearchWordPattern($highlightData['searchWords'], true).')/i';	
 				
@@ -646,7 +646,7 @@ class ViewControl
 					$firstPosDecoded = runner_strpos($value, $searchWord);
 					
 					$truncSubsr = runner_substr($value, 0, $cNumberOfChars);
-					$valueSubstr = runner_substr($value, $firstPosDecoded - $qNumberOfChars, $qNumberOfChars + runner_strlen($searchWord));
+					$valueSubstr = runner_substr($value, $firstPosDecoded - $qNumberOfChars, $qNumberOfChars + runner_strlen((string)$searchWord));
 					$truncSubsr = runner_substr($truncSubsr, 0, $newNumberOfChars);
 					$valueSubstr = runner_htmlspecialchars($valueSubstr);
 					
@@ -680,7 +680,7 @@ class ViewControl
 		$planeSubstr = substr($value, 0, $planeFirstPos);
 		$encodedPlaneSubstr = runner_htmlspecialchars($planeSubstr);
 		
-		return runner_strpos( runner_htmlspecialchars($value), $searchWordEncoded, runner_strlen($encodedPlaneSubstr) );
+		return runner_strpos( runner_htmlspecialchars($value), $searchWordEncoded, runner_strlen((string)$encodedPlaneSubstr) );
 	}
 	
 	/**
@@ -696,7 +696,7 @@ class ViewControl
 		$planeSubstr = substr($value, 0, $planeLastPos);
 		$encodedPlaneSubstr = runner_htmlspecialchars($planeSubstr);
 		
-		return runner_strrpos(runner_htmlspecialchars($value), $searchWordEncoded, runner_strlen($encodedPlaneSubstr));
+		return runner_strrpos(runner_htmlspecialchars($value), $searchWordEncoded, runner_strlen((string)$encodedPlaneSubstr));
 	}
 	
 	/**

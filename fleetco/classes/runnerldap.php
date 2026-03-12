@@ -210,9 +210,9 @@ class RunnerLdap
 	
 	function getGroupSid($userSid, $primaryGroupId)
 	{
-		$tgroup = bin2hex(substr($userSid,0, strlen($userSid)-4));
+		$tgroup = bin2hex(substr($userSid,0, strlen((string)$userSid)-4));
 		$group="";
-		for($i = 0; $i<strlen($tgroup); $i += 2)
+		for($i = 0; $i<strlen((string)$tgroup); $i += 2)
 		{
 			$group .= '\\'.substr($tgroup,$i,2);
 		}

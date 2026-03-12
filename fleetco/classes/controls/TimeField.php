@@ -108,7 +108,7 @@ class TimeField extends DateTimeControl
 	function SQLWhere($SearchFor, $strSearchOption, $SearchFor2, $etype, $isSuggest)
 	{
 		$hasDigits = false;
-		for($i = 0; $i < strlen($SearchFor); $i++)
+		for($i = 0; $i < strlen((string)$SearchFor); $i++)
 		{
 			if(is_numeric($SearchFor[$i]))
 			{
@@ -118,7 +118,7 @@ class TimeField extends DateTimeControl
 		}
 		if(!$hasDigits)
 		{
-			for($i = 0; $i < strlen($SearchFor2); $i++)
+			for($i = 0; $i < strlen((string)$SearchFor2); $i++)
 			{
 				if(is_numeric($SearchFor2[$i]))
 				{

@@ -459,7 +459,7 @@ function mysprintf($format, $params)
  */
 function now()
 {
-	return strftime("%Y-%m-%d %H:%M:%S");
+	return date("Y-m-d H:i:s");
 }
 
 /**
@@ -477,13 +477,13 @@ function refine($str)
  */
 function SupposeImageType($file)
 {
-	if(strlen($file)>1 && $file[0]=='B' && $file[1]=='M')
+	if(strlen((string)$file)>1 && $file[0]=='B' && $file[1]=='M')
 		return "image/bmp";
-	if(strlen($file)>2 &&  $file[0]=='G' && $file[1]=='I' && $file[2]=='F')
+	if(strlen((string)$file)>2 &&  $file[0]=='G' && $file[1]=='I' && $file[2]=='F')
 		return "image/gif";
-	if(strlen($file)>3 &&  ord($file[0])==0xff && ord($file[1])==0xd8 && ord($file[2])==0xff)
+	if(strlen((string)$file)>3 &&  ord($file[0])==0xff && ord($file[1])==0xd8 && ord($file[2])==0xff)
 		return "image/jpeg";
-	if(strlen($file)>8 &&  ord($file[0])==0x89 && ord($file[1])==0x50 && ord($file[2])==0x4e && ord($file[3])==0x47
+	if(strlen((string)$file)>8 &&  ord($file[0])==0x89 && ord($file[1])==0x50 && ord($file[2])==0x4e && ord($file[3])==0x47
 					   &&  ord($file[4])==0x0d && ord($file[5])==0x0a && ord($file[6])==0x1a && ord($file[7])==0x0a)
 		return "image/png";
 }
@@ -529,7 +529,7 @@ function prepare_upload($field, $controltype, $postfilename, $value, $table, $id
 	}
 	if($sbstr1 == "1")
 	{
-		if(strlen($postfilename))
+		if(strlen((string)$postfilename))
 		{
 			$pageObject->filesToDelete[]=new DeleteFile($postfilename, $pageObject->pSet->getUploadFolder($field), $abs);
 			if($pageObject->pSet->getCreateThumbnail($field,$table))
@@ -539,7 +539,7 @@ function prepare_upload($field, $controltype, $postfilename, $value, $table, $id
 	}
 	if(substr($controltype,6,1)=="0")
 		return false;
-	if(strlen($file['tmp_name']))
+	if(strlen((string)$file['tmp_name']))
 	{
 		if(!$pageObject->pSet->getResizeOnUpload($field))
 		{
@@ -1279,7 +1279,7 @@ function parse_backtrace($errfFile, $errLine, $splitAsArray = true)
                 if (is_array($arg))
                 {
                 	$arrStr = print_r($arg, true);
-                    $arrStr = strlen($arrStr) < 200 ? $arrStr : substr($arrStr, 0, 200).'...';
+                    $arrStr = strlen((string)$arrStr) < 200 ? $arrStr : substr($arrStr, 0, 200).'...';
                     $args[] = $j.'.&nbsp;'.runner_htmlspecialchars($arrStr).';';
                 }
                 // process objects
@@ -1290,7 +1290,7 @@ function parse_backtrace($errfFile, $errLine, $splitAsArray = true)
                 // another arguments
                 else
                 {
-                	$arg = @strlen($arg) < 200 ? $arg : @runner_htmlspecialchars(substr($arg, 0, 200)).'...';
+                	$arg = @strlen((string)$arg) < 200 ? $arg : @runner_htmlspecialchars(substr($arg, 0, 200)).'...';
                     $args[] = $j.'.&nbsp;'.$arg.';';
                 }
             }
@@ -1303,7 +1303,7 @@ function parse_backtrace($errfFile, $errLine, $splitAsArray = true)
 		}
 		else
 		{
-			$funCallsArray[] = array('num' => '#'.$i.'.&nbsp;', 'path' => $location, 'func'=>$function, 'args'=>(strlen($params) ? $params : 'N/A'));
+			$funCallsArray[] = array('num' => '#'.$i.'.&nbsp;', 'path' => $location, 'func'=>$function, 'args'=>(strlen((string)$params) ? $params : 'N/A'));
 		}
     }
 
@@ -1437,7 +1437,7 @@ function xtempl_call_func($func,&$params)
  */
 function echoBinary($string, $bufferSize = 8192)
 {
-	for ($chars=strlen($string)-1,$start=0;$start <= $chars;$start += $bufferSize)
+	for ($chars=strlen((string)$string)-1,$start=0;$start <= $chars;$start += $bufferSize)
 		echo substr($string,$start,$bufferSize);
 }
 
@@ -1592,11 +1592,11 @@ function GoodFieldName($field)
 {
 	global $cCharset;
 	if ($cCharset == "utf-8"){
-		$field = utf8_decode($field);
+		$field = mb_convert_encoding($field, 'ISO-8859-1', 'UTF-8');
 	}
 	$field=(string)$field;
 	$out="";
-	for($i=0;$i<strlen($field);$i++)
+	for($i=0;$i<strlen((string)$field);$i++)
 	{
 		$t=substr($field,$i,1);
 		if((ord($t)<ord('a') || ord($t)>ord('z')) && (ord($t)<ord('A') || ord($t)>ord('Z')) && (ord($t)<ord('0') || ord($t)>ord('9')))
@@ -1636,7 +1636,7 @@ function xt_process_template(&$xt,$str)
 	$varparams=array();
 	$start=0;
 	$literal=false;
-	$len = strlen($str);
+	$len = strlen((string)$str);
 	while(true)
 	{
 		$pos = strpos($str,"{",$start);
@@ -1683,7 +1683,7 @@ function xt_process_template(&$xt,$str)
 				return;
 			}
 			$section=substr($str,$endpos+1,$endpos1-$endpos-1);
-			$start=$endpos1+strlen($endtag);
+			$start=$endpos1+strlen((string)$endtag);
 			$sectionVar = xt_getvar($xt,$section_name);
 			if($sectionVar===false)
 			{
@@ -1844,7 +1844,7 @@ function runner_mail_smtp( $params )
 	}
 	else if( ini_get('smtp_port') != '' )
 	{
-		 $mail->Port = ini_get('smtp_port') + 0;
+		 $mail->Port = (int)ini_get('smtp_port');
 	}
 
 	if( GetGlobalData("useSSL") )
@@ -1962,7 +1962,7 @@ function getFileNameFromURL()
  */
 function strlen_bin(&$str)
 {
-	return strlen($str);
+	return strlen((string)$str);
 }
 
 /**
@@ -2059,14 +2059,14 @@ if(!function_exists("hex2bin"))
  */
 function hex2bin($source)
 	 {
-		if(!is_string($source) || strlen($source) == 0 || strlen($source) % 2 > 0)
+		if(!is_string($source) || strlen((string)$source) == 0 || strlen((string)$source) % 2 > 0)
 			return '';
 		$bin = "";
 		$i = 0;
 		do {
 			$bin .= chr(hexdec($source[$i].$source[$i + 1]));
 			$i += 2;
-		} while ($i < strlen($source));
+		} while ($i < strlen((string)$source));
 		return $bin;
 	}
 }
@@ -2368,11 +2368,11 @@ function GetPageURLWithGetParams()
 		$params="";
 		foreach($_GET as $k=>$v)
 		{
-			if(strlen($params))
+			if(strlen((string)$params))
 				$params.="&";
 			$params.=rawurlencode($k)."=".rawurlencode($v);
 		}
-		if(strlen($params))
+		if(strlen((string)$params))
 			$pagename.="?".$params;
 	}
 	if(strpos($pagename,"?")===false)
@@ -2419,7 +2419,7 @@ function verifyRecaptchaResponse( $response ) {
 		$req .= $key . '=' . rawurlencode($value) . '&';
 	}
 	// Cut the last '&'
-	$req = substr($req, 0, strlen($req)-1);
+	$req = substr($req, 0, strlen((string)$req)-1);
 
 	$response = myurl_get_contents($VerifyUrl . $req);
 	$answers = my_json_decode($response, true);
@@ -2477,6 +2477,8 @@ function runner_htmlspecialchars($str)
 {
 	global $useUTF8;
 
+	$str = (string)$str;
+
 	if($useUTF8)
 		return htmlspecialchars($str);
 
@@ -2490,14 +2492,16 @@ function runner_strlen($str)
 {
 	global $useUTF8, $mbEnabled;
 
+	$str = (string)$str;
+
 	if( !$useUTF8 )
-		return strlen($str);
+		return strlen((string)$str);
 
 	if( $mbEnabled )
-		return mb_strlen($str, 'UTF-8');
+		return mb_strlen((string)$str, 'UTF-8');
 
 	//php.net not ISO-8859-1 characters are converted to '?' (one char).
-	return strlen( utf8_decode($str) );
+	return strlen( mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8') );
 }
 
 /**
@@ -2517,7 +2521,7 @@ function runner_strpos($haystack, $needle, $offset = 0)
 		return FALSE;
 
 	if( $offset > 0 )
-		$haystack = runner_substr($haystack, $offset, runner_strlen($haystack) - $offset);
+		$haystack = runner_substr($haystack, $offset, runner_strlen((string)$haystack) - $offset);
 
 	$pos = strpos($haystack, $needle);
 	if( $pos === FALSE )
@@ -2540,10 +2544,10 @@ function runner_strrpos($haystack, $needle, $offset = 0)
 		return mb_strrpos($haystack, $needle, $offset, 'UTF-8');
 
 	if( $offset < 0 )
-		$offset = runner_strlen($haystack) + $offset;
+		$offset = runner_strlen((string)$haystack) + $offset;
 
 	if( $offset > 0 )
-		$haystack = runner_substr($haystack, $offset, runner_strlen($haystack) - $offset);
+		$haystack = runner_substr($haystack, $offset, runner_strlen((string)$haystack) - $offset);
 
 	$rpos = strrpos($haystack, $needle);
 	if( $rpos === FALSE )
@@ -2575,7 +2579,7 @@ function runner_substr($string, $start, $length)
 	$end = $start + $length;
 	//j is the real chars counter;
 	$u8start = $u8end = $j = 0;
-	for($i = 0; $i < strlen($string), $j < $end; $i++)
+	for($i = 0; $i < strlen((string)$string), $j < $end; $i++)
 	{
 		if($j == $start)
 			$u8start = $i;
@@ -2647,7 +2651,7 @@ function runner_decode_numeric_entity($str, $convmap, $encoding)
 function hasNonAsciiSymbols($str)
 {
 	$str = "".$str;
-	for($i=0; $i<strlen($str); $i++)
+	for($i=0; $i<strlen((string)$str); $i++)
 	{
 		if(ord($str[$i])>127)
 			return true;

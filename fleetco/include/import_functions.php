@@ -31,7 +31,7 @@ function getRefinedDateFormat( $dateFormat )
 	$refinedFormat = "";
 	
 	$dateFormat = strtolower( $dateFormat );
-	for($i = 0; $i < strlen($dateFormat); $i++)
+	for($i = 0; $i < strlen((string)$dateFormat); $i++)
 	{
 		$letter = $dateFormat[$i];
 		if( ( $letter == "d" || $letter == "m" || $letter == "y" ) && strpos($refinedFormat, $letter) === false )

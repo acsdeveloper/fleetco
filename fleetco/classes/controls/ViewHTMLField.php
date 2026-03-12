@@ -48,7 +48,7 @@ class ViewHTMLField extends ViewControl
 	 */
 	protected function textNeedsTruncating($value, $cNumberOfChars) 
 	{
-		return !$this->isUsedForFilter && !$this->container->fullText && $cNumberOfChars > 0 && runner_strlen($value) > $cNumberOfChars * 1.2;
+		return !$this->isUsedForFilter && !$this->container->fullText && $cNumberOfChars > 0 && runner_strlen((string)$value) > $cNumberOfChars * 1.2;
 	}
 	
 	/**
@@ -84,10 +84,10 @@ class ViewHTMLField extends ViewControl
 				$valueArr = $this->getSplitStringWithCapturedDelimiters($tagPattern, $value); 
 				foreach($valueArr as $item)
 				{
-					if( !strlen($item) )
+					if( !strlen((string)$item) )
 						continue;
 					//It's a tag or the tag inside a tag's attribute was matched
-					if( $item[0] == '<' || $item[ strlen($item) - 1 ] == '>' || $highlighted )
+					if( $item[0] == '<' || $item[ strlen((string)$item) - 1 ] == '>' || $highlighted )
 					{
 						$res.= $item;
 						continue;
@@ -112,7 +112,7 @@ class ViewHTMLField extends ViewControl
 			{
 				if( trim($item) )
 				{
-					if($item[0] != '<' && $item[ strlen($item) - 1 ] != '>' )
+					if($item[0] != '<' && $item[ strlen((string)$item) - 1 ] != '>' )
 					{
 						//remove tag fragments
 						$newItem = preg_replace("/^.*>|<.*$/", '', $item);
@@ -235,7 +235,7 @@ class ViewHTMLField extends ViewControl
 		$skipTagStart = -1;
 
 		//traversing the html string
-		while( $i < strlen($value) && $j < $cNumberOfChars )
+		while( $i < strlen((string)$value) && $j < $cNumberOfChars )
 		{		
 			if( !$tag && $value[$i] == '<')
 			{			
@@ -376,10 +376,10 @@ class ViewHTMLField extends ViewControl
 		{
 			$truncatedValue.= "</".$tag.">";
 		}
-		$notContentPositions[] = array(0=> $i, 1=> strlen($truncatedValue) - 1);
+		$notContentPositions[] = array(0=> $i, 1=> strlen((string)$truncatedValue) - 1);
 		
 		//echo "<br>".runner_htmlspecialchars( $truncatedValue );
-		return array("value"=> $truncatedValue, "isTruncated"=> $i < strlen($value), "notContentPositions"=> $notContentPositions, "truncLength"=> $i);
+		return array("value"=> $truncatedValue, "isTruncated"=> $i < strlen((string)$value), "notContentPositions"=> $notContentPositions, "truncLength"=> $i);
 	}
 	
 	/**
@@ -430,7 +430,7 @@ class ViewHTMLField extends ViewControl
 		if( !$highlightData )
 			return $truncatedValue;
 
-		$data = $this->getPocessedHTMLValueData( $value, strlen($value) );
+		$data = $this->getPocessedHTMLValueData( $value, strlen((string)$value) );
 		$processedValue = $data['value'];
 
 		$firstSearchWordData = $this->getFirstSearchWordData($highlightData['searchWords'], $data['notContentPositions'], $processedValue);
@@ -447,7 +447,7 @@ class ViewHTMLField extends ViewControl
 		if( $firstPos <= $truncLength ) 
 		{
 			$truncatedUnicodeLength = runner_strlen( substr($value, 0, $truncLength) );
-            $truncatedWithSearchWordUnicodeLength = runner_strlen( substr($value, 0,  $firstPos + strlen($firstSearchWord)));
+            $truncatedWithSearchWordUnicodeLength = runner_strlen( substr($value, 0,  $firstPos + strlen((string)$firstSearchWord)));
 
 			$data = $this->getPocessedHTMLValueData($value, $cNumberOfChars + $truncatedWithSearchWordUnicodeLength - $truncatedUnicodeLength);
 			return $this->getValueHighlighted($data['value'], $highlightData); 
@@ -472,7 +472,7 @@ class ViewHTMLField extends ViewControl
 		$searchWordArr = $this->getSplitStringWithCapturedDelimiters($tagPattern, $searchWord); 
 		foreach($searchWordArr as $item)
 		{
-			if( trim($item) && $item[0] != '<' && $item[ strlen($item) - 1 ] != '>' )
+			if( trim($item) && $item[0] != '<' && $item[ strlen((string)$item) - 1 ] != '>' )
 			{
 				//remove tag fragments
 				$newItem = preg_replace("/^.*>|<.*$/", '', $item);			
@@ -495,7 +495,7 @@ class ViewHTMLField extends ViewControl
 	{
 		$hasTags = false;
 		$firstSearchWord = "";
-		$firstPos = strlen($value);
+		$firstPos = strlen((string)$value);
 		$tagPattern = "/(<[^=>]+\s*(?:(?:[^=>]+=\s*'[^']+'\s*)|".'(?:[^=>]+=\s*"[^"]+"\s*)'.")*>)/iU";
 		
 		foreach($searchWords as $searchWord)
@@ -518,7 +518,7 @@ class ViewHTMLField extends ViewControl
 				$firstSearchWord = $searchWord;
 			}
 		}
-		return array("position"=> $firstPos != strlen($value) ? $firstPos : FALSE, "searchWord"=> $firstSearchWord, "hasTags"=> $hasTags);
+		return array("position"=> $firstPos != strlen((string)$value) ? $firstPos : FALSE, "searchWord"=> $firstSearchWord, "hasTags"=> $hasTags);
 	}
 	
 	/**
@@ -561,7 +561,7 @@ class ViewHTMLField extends ViewControl
 	 */
 	protected function getText($value)
 	{
-		$data = $this->getPocessedHTMLValueData( $value, strlen($value) );
+		$data = $this->getPocessedHTMLValueData( $value, strlen((string)$value) );
 		
 		$value = $data['value'];
 		if( $this->searchHighlight ) 

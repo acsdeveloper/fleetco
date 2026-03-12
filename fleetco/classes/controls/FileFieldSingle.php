@@ -76,7 +76,7 @@ class FileFieldSingle extends EditControl
 			$strtype = '<br><input id="'.$this->ctype.'_keep" type="Radio" name="'.$this->ctype
 					.'" value="upload0" checked class="rnr-uploadtype">'.mlang_message("KEEP");
 			
-			if( (strlen($value) || $mode == MODE_INLINE_EDIT) && !$this->pageObject->pSetEdit->isRequired($this->field) )
+			if( (strlen((string)$value) || $mode == MODE_INLINE_EDIT) && !$this->pageObject->pSetEdit->isRequired($this->field) )
 			{
 				$strtype .= '<input id="'.$this->ctype.'_delete" type="Radio" name="'.$this->ctype
 					.'" value="upload1" class="rnr-uploadtype">'.mlang_message("DELETE");
@@ -103,7 +103,7 @@ class FileFieldSingle extends EditControl
 			.( ($mode == MODE_INLINE_EDIT || $mode == MODE_INLINE_ADD) && $this->is508 == true ? 'alt="'.$this->strLabel.'" ' : '')
 			.' name="'.$this->cfield.'" >'.$strfilename;
 	
-		echo '<input type="Hidden" id="notempty_'.$this->cfieldname.'" value="'.(strlen($value)? 1 : 0).'">';
+		echo '<input type="Hidden" id="notempty_'.$this->cfieldname.'" value="'.(strlen((string)$value)? 1 : 0).'">';
 		
 		$this->buildControlEnd($validate, $mode);
 	}

@@ -424,7 +424,7 @@ class LookupField extends EditControl
 			else
 				$lookup_value = $data[ $this->displayFieldIndex ];
 		}
-		elseif( strlen($this->strLookupWhere) )
+		elseif( strlen((string)$this->strLookupWhere) )
 		{
 			// try w/o WHERE expression
 			$lookupSQL = $this->getLookupSQL(array(), $value, false, true, false);
@@ -439,7 +439,7 @@ class LookupField extends EditControl
 		}
 		
 		// build the regular ajax-lookup control
-		if( $this->LCType == LCT_AJAX && !strlen($lookup_value) && ($this->pageObject->pSetEdit->isfreeInput($this->field) || $this->lookupPageType == PAGE_SEARCH) 
+		if( $this->LCType == LCT_AJAX && !strlen((string)$lookup_value) && ($this->pageObject->pSetEdit->isfreeInput($this->field) || $this->lookupPageType == PAGE_SEARCH) 
 			|| $this->LCType == LCT_LIST && $listOptionContains )
 		{
 			$lookup_value = $value;
@@ -480,7 +480,7 @@ class LookupField extends EditControl
 	{
 		echo '<select '.$this->multiple.' id="'.$this->cfield.'" name="'.$this->cfield.$this->postfix.'" '.$this->inputStyle.$this->alt.'>';
 
-		if( !$this->bUseCategory && strlen($value) )
+		if( !$this->bUseCategory && strlen((string)$value) )
 			$this->buildMultiselectAJAXLookupRows($avalue, $value, $mode, $searchOption);
 		
 		echo '</select>';
@@ -536,7 +536,7 @@ class LookupField extends EditControl
 		}	
 		
 		// try the same query w/o WHERE clause if options were not found
-		if( $options == 0 && strlen($value) && $mode == MODE_EDIT && strlen($this->strLookupWhere) )
+		if( $options == 0 && strlen((string)$value) && $mode == MODE_EDIT && strlen((string)$this->strLookupWhere) )
 		{
 			$lookupSQL = $this->getLookupSQL( array(), $value, false, true, false, true);
 			$qResult = $this->lookupConnection->query( $lookupSQL );
@@ -666,7 +666,7 @@ class LookupField extends EditControl
 		}
 	
 		//	try the same query w/o WHERE clause if current value not found
-		if(!$found && strlen($value) && $mode == MODE_EDIT && strlen($this->strLookupWhere))
+		if(!$found && strlen((string)$value) && $mode == MODE_EDIT && strlen((string)$this->strLookupWhere))
 		{
 			$lookupSQL = $this->getLookupSQL( array(), $value, false, true, false, true);
 			$this->fillLookupFieldsIndexes();
@@ -1188,7 +1188,7 @@ class LookupField extends EditControl
 		}
 		
 		$ret = trim($ret);
-		if( strlen($ret) )
+		if( strlen((string)$ret) )
 			$ret = "(".$ret.")";
 
 		return $ret;
@@ -1325,7 +1325,7 @@ class LookupField extends EditControl
 		if( $this->lookupConnection->dbType == nDATABASE_MSSQLServer )
 			$strUniqueOrderBy = $strOrderBy;
 
-		if( strlen($strOrderBy) )
+		if( strlen((string)$strOrderBy) )
 		{
 			if( $this->lookupType == LT_QUERY )
 				$strOrderBy = RunnerPage::_getFieldSQLDecrypt( $strOrderBy, $this->lookupConnection, $this->lookupPSet, $this->ciphererLookup );
@@ -1359,7 +1359,7 @@ class LookupField extends EditControl
 			$lookupQueryObj->ReplaceFieldsWithDummies( $this->lookupPSet->getBinaryFieldsIndices() );
 			
 			$strWhere = whereAdd( $lookupQueryObj->m_where->toSql($lookupQueryObj), $strWhere );
-			$orderByClause = strlen($strOrderBy) ? ' ORDER BY '.$strOrderBy : null;
+			$orderByClause = strlen((string)$strOrderBy) ? ' ORDER BY '.$strOrderBy : null;
 			
 			return $lookupQueryObj->toSql($strWhere, $orderByClause, null, $oneRecordMode);
 		}	
@@ -1388,10 +1388,10 @@ class LookupField extends EditControl
 		
 		$LookupSQL.= " FROM ".$this->lookupConnection->addTableWrappers( $this->lookupTable );
 	
-		if( strlen($strWhere) )
+		if( strlen((string)$strWhere) )
 			$LookupSQL.=" WHERE ".$strWhere;
 
-		if( strlen($strOrderBy) )
+		if( strlen((string)$strOrderBy) )
 			$LookupSQL.= " ORDER BY ".$this->lookupConnection->addTableWrappers( $this->lookupTable ).".".$strOrderBy;
 		
 		if( $this->lookupConnection->dbType == nDATABASE_MySQL )
@@ -1448,7 +1448,7 @@ class LookupField extends EditControl
 			$strCategoryFilter = $cdata['lookup'];
 			$parentVal = $parentValueData[ $strCategoryControl ];
 			
-			if( !$this->pageObject->pSetEdit->multiSelect($strCategoryControl) && !strlen($parentVal) )
+			if( !$this->pageObject->pSetEdit->multiSelect($strCategoryControl) && !strlen((string)$parentVal) )
 				continue;			
 			
 			$parentValsPlain = $this->pageObject->pSetEdit->multiSelect($strCategoryControl) ? splitvalues( $parentVal ) : array( $parentVal );
@@ -1534,7 +1534,7 @@ class LookupField extends EditControl
 			
 			foreach( $parentVals as $parentVal ) 
 			{
-				if( !strlen($parentVal) )
+				if( !strlen((string)$parentVal) )
 					continue;
 				
 				if( $this->lookupType == LT_QUERY )
@@ -1597,7 +1597,7 @@ class LookupField extends EditControl
 		{
 			$data = $qResult->fetchNumeric();
 			// one record only
-			if( $data && (!$this->multiselect && strlen($childVal) || !$qResult->fetchNumeric()) )
+			if( $data && (!$this->multiselect && strlen((string)$childVal) || !$qResult->fetchNumeric()) )
 			{
 				$response[] = $data[ $lookupIndexes["linkFieldIndex"] ];
 				$response[] = $data[ $lookupIndexes["displayFieldIndex"] ];

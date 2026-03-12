@@ -1,5 +1,5 @@
 <?php
-require_once getabspath("plugins/PHPExcel/IOFactory.php");
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 /**
  * Open an Excel file
@@ -12,15 +12,14 @@ function openImportExcelFile($uploadfile, $ext)
 {
 	if( strtoupper($ext) == "XLSX" )
 	{
-		$objPHPExcel = PHPExcel_IOFactory::load($uploadfile);
+		$objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($uploadfile);
 	}
 	else
 	{
-		$objPHPExcel = new PHPExcel();
-		$objReader = PHPExcel_IOFactory::createReader("Excel5");
+		$objReader   = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xls");
 		$objPHPExcel = $objReader->load($uploadfile);
 	}
-	
+
 	return $objPHPExcel;
 }
 
@@ -36,11 +35,11 @@ function getImportExcelFields($data)
 	$worksheet = $data->getSheet();
 	$highestColumn = $worksheet->getHighestColumn();
 	
-	$highestColumnIndex = PHPExcel_Cell::columnIndexFromString( $highestColumn );
+	$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString( $highestColumn );
 	for($col = 0; $col < $highestColumnIndex; ++$col)
 	{
-		$fieldName = $worksheet->getCellByColumnAndRow($col, 1)->getValue();
-		if( !strlen($fieldName) )
+		$fieldName = $worksheet->getCell([$col + 1, 1])->getValue();
+		if( !strlen((string)$fieldName) )
 			break;
 			
 		$fields[] = $fieldName;	
@@ -81,7 +80,7 @@ function ImportDataFromExcel( $fileHandle, $fieldsData, $keys, $importPageObject
 		// get a litteral index of the 'highest' column (e.g. 'K')
 		$highestColumn = $worksheet->getHighestColumn();
 		// get an index number of the 'highest' column (e.g. 11)
-		$highestColumnIndex = PHPExcel_Cell::columnIndexFromString( $highestColumn );
+		$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString( $highestColumn );
 		
 		for($row = $startRow; $row <= $highestRow; $row++)
 		{
@@ -94,22 +93,22 @@ function ImportDataFromExcel( $fileHandle, $fieldsData, $keys, $importPageObject
 					
 				$importFieldName = $fieldsData[ $col ]["fName"];
 				
-				$cell = $worksheet->getCellByColumnAndRow($col, $row);
+				$cell = $worksheet->getCell([$col + 1, $row]);
 				$cellValue = $cell->getValue();
 				
-				if( PHPExcel_Shared_Date::isDateTime($cell) )
+				if( \PhpOffice\PhpSpreadsheet\Shared\Date::isDateTime($cell) )
 				{
 					$cellDateFormat = $fileHandle->getCellXfByIndex( $cell->getXfIndex() )->getNumberFormat()->getFormatCode();
-					$cellTextValue = PHPExcel_Style_NumberFormat::ToFormattedString($cellValue, $cellDateFormat);
+					$cellTextValue = \PhpOffice\PhpSpreadsheet\Style\NumberFormat::toFormattedString($cellValue, $cellDateFormat);
 					$cellValue = getDBDateValue( $cellTextValue, $cellDateFormat );				
 				}
 				else
 				{
-					if( is_a($cellValue, 'PHPExcel_RichText') )
+					if( $cellValue instanceof \PhpOffice\PhpSpreadsheet\RichText\RichText )
 						$cellValue = $cellValue->getPlainText();					
 										
 					$error_handler = set_error_handler("empty_error_handler");
-					$cellValue = PHPExcel_Shared_String::ConvertEncoding($cellValue, $cCharset, 'UTF-8');				
+					$cellValue = mb_convert_encoding((string)$cellValue, $cCharset ?: 'UTF-8', 'UTF-8');				
 					if( $error_handler )
 						set_error_handler($error_handler);
 					
@@ -165,24 +164,24 @@ function getPreviewDataFromExcel( $fileHandle, &$fieldsData )
 		// get a litteral index of the 'highest' column (e.g. 'K')
 		$highestColumn = $worksheet->getHighestColumn();
 		// get an index number of the 'highest' column (e.g. 11)
-		$highestColumnIndex = PHPExcel_Cell::columnIndexFromString( $highestColumn );
-		
+		$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString( $highestColumn );
+
 		// start traversing rows from the first one that contains columns' names
 		for($row = 1; $row <= $highestRow; $row++)
 		{
 			$rowData = array();
 			for($col = 0; $col < $highestColumnIndex; $col++)
 			{
-				$cell = $worksheet->getCellByColumnAndRow($col, $row);
+				$cell      = $worksheet->getCell([$col + 1, $row]);
 				$cellValue = $cell->getValue();
-				
+
 				if( $row > 1 )
 				{
 					$columnMatched = isset( $fieldsData[ $col ] );
-					if( PHPExcel_Shared_Date::isDateTime($cell) )
+					if( \PhpOffice\PhpSpreadsheet\Shared\Date::isDateTime($cell) )
 					{
 						$cellDateFormat = $fileHandle->getCellXfByIndex( $cell->getXfIndex() )->getNumberFormat()->getFormatCode();
-						$cellTextValue = PHPExcel_Style_NumberFormat::ToFormattedString($cellValue, $cellDateFormat);
+						$cellTextValue  = \PhpOffice\PhpSpreadsheet\Style\NumberFormat::toFormattedString($cellValue, $cellDateFormat);
 						$cellValue = getTimeStamp($cellTextValue, $cellDateFormat);	
 
 						if( !$columnMatched )
@@ -191,7 +190,7 @@ function getPreviewDataFromExcel( $fileHandle, &$fieldsData )
 						$fieldsData[ $col ]["dateTimeType"] = true;
 						$fieldsData[ $col ]["requireFormatting"] = true;						
 					}
-					else if( $columnMatched && $fieldsData[ $col ]["dateTimeType"] && !strlen($dateFormat) )
+					else if( $columnMatched && $fieldsData[ $col ]["dateTimeType"] && !strlen((string)$dateFormat) )
 						$dateFormat = ImportPage::extractDateFormat( $cellValue );			
 				}
 
@@ -205,7 +204,7 @@ function getPreviewDataFromExcel( $fileHandle, &$fieldsData )
 	$previewData["tableData"] = $tableData;
 	
 	if( ImportPage::hasDateTimeFields( $fieldsData ) )
-		$previewData["dateFormat"] = !strlen($dateFormat) ? $locale_info["LOCALE_SSHORTDATE"] : $dateFormat;
+		$previewData["dateFormat"] = !strlen((string)$dateFormat) ? $locale_info["LOCALE_SSHORTDATE"] : $dateFormat;
 	
 	return $previewData;
 }

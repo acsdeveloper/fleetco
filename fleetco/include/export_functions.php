@@ -1,5 +1,5 @@
 <?php
-require_once(getabspath("plugins/PHPExcel/IOFactory.php"));
+require_once __DIR__ . '/../../vendor/autoload.php';
 require_once getabspath("include/export_functions_excel.php");
 
 function ExportToExcel($rs, $nPageSize, $eventObj, $cipherer, $pageObj)

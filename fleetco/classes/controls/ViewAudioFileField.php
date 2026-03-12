@@ -6,7 +6,7 @@ class ViewAudioFileField extends ViewFileField
 	{
 		$value = "";
 		$fileName = $data[$this->field];
-		if( strlen($fileName) )
+		if( strlen((string)$fileName) )
 		{
 			$fieldIsUrl = $this->container->pSet->isVideoUrlField($this->field);
 			if(!$fieldIsUrl)

@@ -354,7 +354,7 @@ $tdatafuelmaster_Chart[".listGridLayout"] = 3;
 
 
 $tstrOrderBy = "";
-if(strlen($tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
+if(strlen((string)$tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
 	$tstrOrderBy = "order by ".$tstrOrderBy;
 $tdatafuelmaster_Chart[".strOrderBy"] = $tstrOrderBy;
 

@@ -53,7 +53,7 @@ class SQLNonParsed extends SQLEntity
 
 	function IsAsterisk() 
 	{
-		$last = substr($this->m_sql,strlen($this->m_sql)-1);
+		$last = substr($this->m_sql,strlen((string)$this->m_sql)-1);
 		return ($last=="*");
 	}
 
@@ -1168,32 +1168,32 @@ class SQLQuery extends SQLEntity
 	static function gSQLWhere_having($sqlHead, $sqlFrom, $sqlWhere, $sqlGroupBy, $sqlHaving, $where="", $having="", $criteria = "or")
 	{
 		$strWhere = whereAdd($sqlWhere,$where);
-		if(strlen($strWhere) && $sqlWhere != '(1=1)')
+		if(strlen((string)$strWhere) && $sqlWhere != '(1=1)')
 			$strWhere=" where ".$strWhere." ";
 		
 		$sqlW="";
-		if(strlen($sqlWhere) && $sqlWhere != '(1=1)')
+		if(strlen((string)$sqlWhere) && $sqlWhere != '(1=1)')
 			$sqlW=" where ".$sqlWhere." ";
 	
 		$strHaving = whereAdd($sqlHaving, $having);
-		if (strlen($strHaving) && $strHaving != '(1=1)')
+		if (strlen((string)$strHaving) && $strHaving != '(1=1)')
 			$strHaving =" having ".$strHaving." ";
 		
 		$sqlH="";
-		if(strlen($sqlHaving) && $sqlHaving != '(1=1)' || $criteria == 'and' && strlen($having) && $having != '(1=1)'){
+		if(strlen((string)$sqlHaving) && $sqlHaving != '(1=1)' || $criteria == 'and' && strlen((string)$having) && $having != '(1=1)'){
 			$sqlH = " having ".$sqlHaving;
-			if($criteria == 'and' && strlen($having) && $having != '(1=1)')
-				$sqlH .= " ".(strlen($sqlHaving) && strlen($having) ? ' and ' : '').$having;
+			if($criteria == 'and' && strlen((string)$having) && $having != '(1=1)')
+				$sqlH .= " ".(strlen((string)$sqlHaving) && strlen((string)$having) ? ' and ' : '').$having;
 		}
 			
 		$sql1="";
 		$sql2="";
 		$union="";
 		
-		if(strlen($where) && $where != '(1=1)' || !strlen($having) || $having == '(1=1)' || $criteria == "and")
+		if(strlen((string)$where) && $where != '(1=1)' || !strlen((string)$having) || $having == '(1=1)' || $criteria == "and")
 			$sql1=$sqlHead." ".$sqlFrom.' '.$strWhere.' '.$sqlGroupBy.' '.$sqlH;
 		
-		if (strlen($having) && $having != '(1=1)' && $criteria == "or"){
+		if (strlen((string)$having) && $having != '(1=1)' && $criteria == "or"){
 			$sql2 = $sqlHead." ".$sqlFrom.' '.$sqlW.' '.$sqlGroupBy.' '.$strHaving;
 		}
 		
@@ -1232,7 +1232,7 @@ class SQLQuery extends SQLEntity
 	static function gSQLRowCount_int($sqlHead, $sqlFrom, $sqlWhere, $sqlGroupBy, $sqlHaving, $where, $having, $connection, $criteria="or")
 	{		
 		$strWhere = whereAdd($sqlWhere, $where);
-		if( strlen($strWhere) )
+		if( strlen((string)$strWhere) )
 			$strWhere = " where ".$strWhere." ";
 		
 		$useAsSubquery = strlen( $sqlGroupBy ) > 0;
@@ -1259,11 +1259,11 @@ class SQLQuery extends SQLEntity
 		
 		if( !is_object($fieldListItem) )
 			return false;
-		if( 0 != strlen($fieldListItem->m_alias) )
+		if( 0 != strlen((string)$fieldListItem->m_alias) )
 			return false;
 		if( !is_a($fieldListItem->m_expr, 'SQLField') )
 			return false;
-		if( strlen($fieldListItem->m_expr->m_strTable) != 0 && $fieldListItem->m_expr->m_strTable != $tableName )
+		if( strlen((string)$fieldListItem->m_expr->m_strTable) != 0 && $fieldListItem->m_expr->m_strTable != $tableName )
 			return false;
 			
 		return 0 == strcasecmp($fieldListItem->m_expr->m_strName, $field);

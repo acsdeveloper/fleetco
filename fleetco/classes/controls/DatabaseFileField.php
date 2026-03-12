@@ -62,7 +62,7 @@ class DatabaseFileField extends EditControl
 			}
 			else
 			{
-				if(strlen($value))
+				if(strlen((string)$value))
 				{
 					$disp = '<img id="image_'.GoodFieldName($this->field).'_'.$this->id.'" name="'.$this->cfield.'" border=0 ';
 					if($this->is508)
@@ -71,7 +71,7 @@ class DatabaseFileField extends EditControl
 				}
 				}
 //	filename
-			if($this->format == EDIT_FORMAT_DATABASE_FILE && !$itype && strlen($value))
+			if($this->format == EDIT_FORMAT_DATABASE_FILE && !$itype && strlen((string)$value))
 			{
 				if(!($filename = @$data[$this->pageObject->pSetEdit->getFilenameField($this->field)]))
 					$filename = "file.bin";
@@ -96,10 +96,10 @@ class DatabaseFileField extends EditControl
 						.$this->cfieldname.'" size="20" maxlength="50" value="'.runner_htmlspecialchars($filename).'">';					
 				}
 			}
-			if(strlen($value)) {
+			if(strlen((string)$value)) {
 				$strtype = '<br><input id="'.$this->ctype.'_keep" type="Radio" name="'.$this->ctype.'" value="file0" checked class="rnr-uploadtype">'.mlang_message("KEEP");
 			
-			if(strlen($value) && !$this->pageObject->pSetEdit->isRequired($this->field))
+			if(strlen((string)$value) && !$this->pageObject->pSetEdit->isRequired($this->field))
 			{
 					$strtype .= '<input id="'.$this->ctype.'_delete" type="Radio" name="'.$this->ctype.'" value="file1" class="rnr-uploadtype">'.mlang_message("DELETE");
 			}
@@ -123,14 +123,14 @@ class DatabaseFileField extends EditControl
 		if($mode == MODE_INLINE_EDIT && $this->format == EDIT_FORMAT_DATABASE_FILE)
 			$disp = "";
 		echo $disp.$strtype;
-		if (($mode == MODE_EDIT || $mode==MODE_INLINE_EDIT) && (strlen($value)))
+		if (($mode == MODE_EDIT || $mode==MODE_INLINE_EDIT) && (strlen((string)$value)))
 		{
 			echo '<br>';
 		}
 		echo '<input type="File" '.$this->inputStyle.' id="'.$this->cfield.'" '
 			.(($mode==MODE_INLINE_EDIT || $mode==MODE_INLINE_ADD) && $this->is508 ? 'alt="'.$this->strLabel.'" ' : '').' name="'
 			.$this->cfield.'" >'.$strfilename;
-		echo '<input type="Hidden" id="notempty_'.$this->cfieldname.'" value="'.(strlen($value) ? 1 : 0).'">';
+		echo '<input type="Hidden" id="notempty_'.$this->cfieldname.'" value="'.(strlen((string)$value) ? 1 : 0).'">';
 		$this->buildControlEnd($validate, $mode);
 	}
 

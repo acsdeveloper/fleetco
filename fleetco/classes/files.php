@@ -23,7 +23,7 @@ class MoveFile
 		{
 			$path = getabspath($path);
 		}
-		$last = substr($path,strlen($path)-1);
+		$last = substr($path,strlen((string)$path)-1);
 		if($last!="/" && $last!="\\")
 			$path .= "/";
 		runner_move_uploaded_file($this->sourceFilename,$path.$this->destFilename);
@@ -50,7 +50,7 @@ class SaveFile
 		{
 			$path = getabspath($path);
 		}
-		$last = substr($path,strlen($path)-1);
+		$last = substr($path,strlen((string)$path)-1);
 		if($last!="/" && $last!="\\")
 			$path .= "/";
 		runner_save_file($path.$this->destFilename,$this->fileContents);
@@ -75,7 +75,7 @@ class DeleteFile
 		{
 			$path = getabspath($path);
 		}
-		$last = substr($path,strlen($path)-1);
+		$last = substr($path,strlen((string)$path)-1);
 		if($last!="/" && $last!="\\")
 			$path .= "/";
 		runner_delete_file($path.$this->destFilename);

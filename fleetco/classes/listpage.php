@@ -682,7 +682,7 @@ class ListPage extends RunnerPage
 				}
 			}
 			
-			if (strlen($this->deleteMessage))
+			if (strlen((string)$this->deleteMessage))
 			{
 				$this->xt->assignbyref("message", $this->deleteMessage);
 				$this->xt->assignbyref( "message_class", $message_class );
@@ -701,7 +701,7 @@ class ListPage extends RunnerPage
 		if( $this->stopPRG )
 			return false;
 		
-		if(no_output_done() && count($this->selectedRecs) && !strlen($this->deleteMessage)) 
+		if(no_output_done() && count($this->selectedRecs) && !strlen((string)$this->deleteMessage)) 
 		{	
 			// redirect, add a=return param for saving SESSION
 			HeaderRedirect($this->shortTableName, $this->getPageType(), "a=return");
@@ -1233,7 +1233,7 @@ class ListPage extends RunnerPage
 				$subQ = "";
 				foreach($this->detailKeysByD[$i] as $k) 
 				{
-					if( strlen($subQ) )
+					if( strlen((string)$subQ) )
 						$subQ.= ",";
 					$subQ.= RunnerPage::_getFieldSQL($k, $this->connection, $detailsSettings);
 				}
@@ -1241,9 +1241,9 @@ class ListPage extends RunnerPage
 				
 				//	add security where clause for sub query	
 				$securityClause = SecuritySQL("Search", $dataSourceTName);
-				if( strlen($securityClause) )
+				if( strlen((string)$securityClause) )
 					$subQ.= " WHERE ".whereAdd($detailsSqlWhere, $securityClause);
-				elseif( strlen($detailsSqlWhere) )
+				elseif( strlen((string)$detailsSqlWhere) )
 					$subQ.= " WHERE ".whereAdd("", $detailsSqlWhere);
 				
 				// add detail table query tail	

@@ -40,7 +40,7 @@ class xml
 	*/
 	function prv_xml_to_array(&$arg_tags, &$arg_current_tag)
 	{
-		while(list(, $arr_tag) = each($arg_tags))
+		foreach($arg_tags as $arr_tag)
 		{
 			if($arr_tag['level'] > 1)
 			{

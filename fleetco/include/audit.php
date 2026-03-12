@@ -92,7 +92,7 @@ class AuditTrailTable
 						else
 						{
 							$v=str_replace(array("\r\n","\n","\t")," ",$val);
-							if(strlen($v)>$this->maxFieldLength)
+							if(strlen((string)$v)>$this->maxFieldLength)
 								$v=runner_substr($val,0,$this->maxFieldLength);
 						}
 						$strFields.=$v."\r\n";
@@ -162,7 +162,7 @@ class AuditTrailTable
 						else
 						{
 							$v=str_replace(array("\r\n","\n","\t")," ",$oldvalue);
-							if(strlen($v)>$this->maxFieldLength)
+							if(strlen((string)$v)>$this->maxFieldLength)
 								$v=runner_substr($v,0,$this->maxFieldLength);
 						}
 						$strFields.=$v."\r\n";
@@ -173,7 +173,7 @@ class AuditTrailTable
 						else
 						{
 							$v=str_replace(array("\r\n","\n","\t")," ",$newvalue);
-							if(strlen($v)>$this->maxFieldLength)
+							if(strlen((string)$v)>$this->maxFieldLength)
 								$v=runner_substr($v,0,$this->maxFieldLength);
 						}
 						$strFields.=$v."\r\n";
@@ -221,7 +221,7 @@ class AuditTrailTable
 						else
 						{	
 							$v=str_replace(array("\r\n","\n","\t")," ",$val);
-							if(strlen($v)>$this->maxFieldLength)
+							if(strlen((string)$v)>$this->maxFieldLength)
 								$v=runner_substr($v,0,$this->maxFieldLength);
 						}
 						$strFields.=$v."\r\n";
@@ -584,7 +584,7 @@ class AuditTrailFile
 						else
 						{
 							$v=str_replace(array("\r\n","\n","\t")," ",$val);
-							if(strlen($v)>$this->maxFieldLength)
+							if(strlen((string)$v)>$this->maxFieldLength)
 								$v=runner_substr($v,0,$this->maxFieldLength);
 						}
 						$str_add.=$str.chr(9).$idx.chr(9).chr(9).$v."\r\n";
@@ -648,7 +648,7 @@ class AuditTrailFile
 						else
 						{
 							$v1=str_replace(array("\r\n","\n","\t")," ",$oldvalue);
-							if(strlen($v1)>$this->maxFieldLength)
+							if(strlen((string)$v1)>$this->maxFieldLength)
 								$v1=runner_substr($v1,0,$this->maxFieldLength);
 						}
 						
@@ -658,7 +658,7 @@ class AuditTrailFile
 						else
 						{
 							$v2=str_replace(array("\r\n","\n","\t")," ",$newvalue);
-							if(strlen($v2)>$this->maxFieldLength)
+							if(strlen((string)$v2)>$this->maxFieldLength)
 								$v2=runner_substr($v2,0,$this->maxFieldLength);
 						}
 						$str_add.=$str.chr(9).$idx.chr(9).$v1.chr(9).$v2."\r\n";
@@ -705,7 +705,7 @@ class AuditTrailFile
 					else
 					{
 						$v=str_replace(array("\r\n","\n","\t")," ",$val);
-						if(strlen($v)>$this->maxFieldLength)
+						if(strlen((string)$v)>$this->maxFieldLength)
 							$v=runner_substr($v,0,$this->maxFieldLength);
 					}
 					$str_add.=$str.chr(9).$idx.chr(9).$v."\r\n";
@@ -723,7 +723,7 @@ class AuditTrailFile
 	{
 		$p=strrpos($this->logfile,".");
 		$logfileName=runner_substr($this->logfile,0,$p);
-		$logfileExt=runner_substr($this->logfile,$p+1, strlen($this->logfile)-1);
+		$logfileExt=runner_substr($this->logfile,$p+1, strlen((string)$this->logfile)-1);
 		$tn=$logfileName."_".format_datetime_custom(db2time(now()),"yyyyMMdd").".".$logfileExt;
 		
 		$fullname = getabspath($tn);

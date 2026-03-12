@@ -7,30 +7,29 @@ $useDompdf = true;
 	
 if( $useDompdf )
 {
-	//restore_error_handler();
-	
+	require_once __DIR__ . '/../../vendor/autoload.php';
+
 	//form a unique name
 	$tarr = explode(" ", microtime());
 	$outfileid = $tarr[1] . round($tarr[0] * 10);
 	$outfilename = GetTableURL() . $outfileid . ".pdf";
 
-	//process margins	
+	//process margins
 	if( !$pagewidth || $pagewidth < 400 )
-		$pagewidth = 800;	
-	define("DOMPDF_DPI", $landscape ? $pagewidth * 25.4 / 297 : $pagewidth * 25.4 / 210 );
+		$pagewidth = 800;
+	$dpi = (int)($landscape ? $pagewidth * 25.4 / 297 : $pagewidth * 25.4 / 210);
 
-	include( getabspath( "plugins/dompdf/dompdf_config.inc.php" ) );
-	$dompdf = new DOMPDF();
+	$dompdfOptions = new \Dompdf\Options();
+	$dompdfOptions->setDpi($dpi);
+	$dompdfOptions->setIsRemoteEnabled(true);
 
-	$dompdf->load_html( $page );
-	$dompdf->set_paper('a4', $landscape ? 'landscape' : 'portrait');
+	$dompdf = new \Dompdf\Dompdf($dompdfOptions);
+	$dompdf->loadHtml($page);
+	$dompdf->setPaper('a4', $landscape ? 'landscape' : 'portrait');
 	$dompdf->render();
 
-	/*$pfdoutput = $dompdf->output();
-	file_put_contents("templates_c/".$outfilename, $pfdoutput);*/
-  $options = array();
-  $options["pdfDownloadedEnd"] = postvalue("rndval");
-	$dompdf->stream( $outfilename, $options );
+	$streamOptions = ['Attachment' => false, 'pdfDownloadedEnd' => postvalue("rndval")];
+	$dompdf->stream($outfilename, $streamOptions);
 
 	exit();
 }	

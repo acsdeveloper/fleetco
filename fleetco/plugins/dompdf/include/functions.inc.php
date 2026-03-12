@@ -363,7 +363,7 @@ if (!extension_loaded('mbstring')) {
         return utf8_encode($data);
       }
       
-      return utf8_decode($data);
+      return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $data);
     }
   }
   
@@ -394,7 +394,7 @@ if (!extension_loaded('mbstring')) {
       switch (str_replace('-', '', strtolower($encoding))) {
         case "utf8": return strlen(utf8_encode($str));
         case "8bit": return strlen($str);
-        default:     return strlen(utf8_decode($str));
+        default:     return strlen(iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $str));
       }
     }
   }

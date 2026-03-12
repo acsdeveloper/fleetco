@@ -30,7 +30,7 @@ if(@$_SERVER["REQUEST_URI"])
 
 
 //E_STRICT has become a part of E_ALL since php 5.4 only
-error_reporting( (E_ALL | E_STRICT) & ~E_STRICT & ~E_NOTICE );
+error_reporting( (E_ALL | E_STRICT) & ~E_STRICT & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING );
 
 /// include php specific code
 include("phpfunctions.php");

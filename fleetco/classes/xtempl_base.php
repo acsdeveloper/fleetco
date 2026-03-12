@@ -497,7 +497,7 @@ $mlang_charsets["Spanish"]="Windows-1252";;
 			$hideContainer = true;
 			foreach($container as $brick)
 			{
-				if(!strlen($brick["block"]))
+				if(!strlen((string)$brick["block"]))
 				{
 					$showContainer = true;
 				}

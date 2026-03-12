@@ -77,7 +77,7 @@ class MapPage_Dashboard extends ListPage_Dashboard
 		$data = $this->beforeProccessRow();		
 		$tKeys = $this->pSet->getTableKeys();
 		
-		$recNum = $this->hasTableDashGridElement() || strlen($this->masterTable)? $this->pageSize : $this->dashElementData["mapMarkerCount"];
+		$recNum = $this->hasTableDashGridElement() || strlen((string)$this->masterTable)? $this->pageSize : $this->dashElementData["mapMarkerCount"];
 		
 		if( !$this->mapRefresh && ( $this->dashElementData['clustering'] || $this->dashElementData['heatMap'] )  )
 		{

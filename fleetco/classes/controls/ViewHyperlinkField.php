@@ -3,16 +3,16 @@ class ViewHyperlinkField extends ViewControl
 {
 	public function showDBValue(&$data, $keylink)
 	{
-		if(!strlen($data[$this->field]))
+		if(!strlen((string)$data[$this->field]))
 			return "";
 		$ret = $data[$this->field];
 		$title = $ret;
 		$link = $ret;
-		if(substr($ret,strlen($ret)-1)=='#')
+		if(substr($ret,strlen((string)$ret)-1)=='#')
 		{
 			$i = strpos($ret,'#');
 			$title = substr($ret,0,$i);
-			$link = substr($ret,$i+1,strlen($ret)-$i-2);
+			$link = substr($ret,$i+1,strlen((string)$ret)-$i-2);
 			if(!$title)
 				$title = $link;
 		}
@@ -89,10 +89,10 @@ class ViewHyperlinkField extends ViewControl
 			return "";	
 
 		$link = $data[ $this->field ];
-		if( substr($ret, strlen($ret) - 1) == '#' )
+		if( substr($ret, strlen((string)$ret) - 1) == '#' )
 		{
 			$i = strpos($ret, '#');
-			$link = substr($ret, $i + 1, strlen($ret) - $i - 2);
+			$link = substr($ret, $i + 1, strlen((string)$ret) - $i - 2);
 		}
 		
 		$prefix = $this->getContainer()->pSet->getLinkPrefix( $this->field );

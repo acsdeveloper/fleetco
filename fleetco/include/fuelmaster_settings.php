@@ -573,7 +573,7 @@ $tdatafuelmaster[".warnLeavingPages"] = true;
 
 
 $tstrOrderBy = "";
-if(strlen($tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
+if(strlen((string)$tstrOrderBy) && strtolower(substr($tstrOrderBy,0,8))!="order by")
 	$tstrOrderBy = "order by ".$tstrOrderBy;
 $tdatafuelmaster[".strOrderBy"] = $tstrOrderBy;
 

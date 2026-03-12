@@ -74,10 +74,10 @@ class UploadHandler
     }
 
     public function getFullUrl() {
-        $https = strlen($_SERVER['HTTPS']) != 0 && $_SERVER['HTTPS'] !== 'off';
+        $https = strlen((string)$_SERVER['HTTPS']) != 0 && $_SERVER['HTTPS'] !== 'off';
       	return
     		($https ? 'https://' : 'http://').
-    		(strlen($_SERVER['REMOTE_USER']) != 0 ? $_SERVER['REMOTE_USER'].'@' : '').
+    		(strlen((string)$_SERVER['REMOTE_USER']) != 0 ? $_SERVER['REMOTE_USER'].'@' : '').
     		(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ($_SERVER['SERVER_NAME'].
     		($https && $_SERVER['SERVER_PORT'] === 443 ||
     		$_SERVER['SERVER_PORT'] === 80 ? '' : ':'.$_SERVER['SERVER_PORT']))).
@@ -482,10 +482,10 @@ class UploadHandler
 		$ret = pathinfo($path);
 		if(!isset($ret["filename"]))
 		{
-			$extlen = strlen($ret['extension']);
+			$extlen = strlen((string)$ret['extension']);
 			if($extlen)
 				++$extlen;
-			$ret["filename"] = substr($ret["basename"],0, strlen($ret["basename"]) - $extlen);
+			$ret["filename"] = substr($ret["basename"],0, strlen((string)$ret["basename"]) - $extlen);
 		}
 		return $ret;
 	}

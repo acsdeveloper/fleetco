@@ -106,7 +106,7 @@ foreach($allSearchFields as $f)
 	$where = $fieldControl->getSuggestWhere($searchOpt, $searchFor, $isAggregateField);
 	$having = $fieldControl->getSuggestHaving($searchOpt, $searchFor, $isAggregateField);
 		
-	if( !strlen($where) && !strlen($having) )
+	if( !strlen((string)$where) && !strlen((string)$having) )
 		continue;
 	
 	$where = whereAdd($where . $filterWhere . $masterWhere, $strSecuritySql);
@@ -174,8 +174,8 @@ foreach($response as $value => $realValue)
 	}
 	else
 	{
-		$highlightedValue = runner_htmlspecialchars( substr($strValue, 0, $pos) )."<b>".runner_htmlspecialchars( substr($strValue, $pos, strlen($searchFor)) )."</b>"
-			.runner_htmlspecialchars( substr($strValue, $pos + strlen($searchFor)) );
+		$highlightedValue = runner_htmlspecialchars( substr($strValue, 0, $pos) )."<b>".runner_htmlspecialchars( substr($strValue, $pos, strlen((string)$searchFor)) )."</b>"
+			.runner_htmlspecialchars( substr($strValue, $pos + strlen((string)$searchFor)) );
 		
 		$result[] = array("value" => $highlightedValue, "realValue" => $strRealValue);
 	}

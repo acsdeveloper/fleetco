@@ -57,7 +57,7 @@ class ViewDatabaseImageField extends ViewControl
 			$linkClass = "zoombox";
 			if( $this->thumbWidth && $this->thumbHeight )
 			{
-				$hasThumbnail = $thumbPref != "" && strlen($data[ $thumbPref ]);
+				$hasThumbnail = $thumbPref != "" && strlen((string)$data[ $thumbPref ]);
 				$thumbFileUrl = $hrefBegin."&field=".( $hasThumbnail ? rawurlencode($thumbPref) : rawurlencode($this->field) ).$hrefEnd;
 				$smallThumbnailStyle = $this->getSmallThumbnailStyle( $thumbFileUrl, $hasThumbnail );
 				$linkClass.= " background-picture";

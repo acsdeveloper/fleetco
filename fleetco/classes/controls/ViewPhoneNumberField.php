@@ -26,10 +26,10 @@ class ViewPhoneNumberField extends ViewControl
 	{
 		$result = $data[ $this->field ];
 		
-		if( strlen($result) == 7 )
+		if( strlen((string)$result) == 7 )
 			return substr($result, 0, 3)."-".substr($result, 3);
 		
-		if( strlen($result) == 10 )
+		if( strlen((string)$result) == 10 )
 			return "(".substr($result, 0, 3).") ".substr($result, 3, 3)."-".substr($result, 6);	
 		
 		return $result;

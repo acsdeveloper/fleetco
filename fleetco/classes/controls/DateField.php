@@ -269,7 +269,7 @@ class DateField extends DateTimeControl
 		for ( $i =0; $i < count($mounts); $i++ )
 		{
 			$curMontn = $mounts[$i];
-			$curMonthLen = runner_strlen($curMontn);
+			$curMonthLen = runner_strlen((string)$curMontn);
 			if ( $maxLenght < $curMonthLen )
 			{
 				$maxLenght = $curMonthLen;				

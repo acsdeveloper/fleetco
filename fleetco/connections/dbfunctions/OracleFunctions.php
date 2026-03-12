@@ -18,15 +18,15 @@ class OracleFunctions extends DBFunctions
 	{
 		$ora_maxstring = 4000;
 		
-		if( strlen($str) < $ora_maxstring )
+		if( strlen((string)$str) < $ora_maxstring )
 			return "'".$this->addSlashes( $str )."'";
 			
 	//	split ret to 4000-len substrings
 		$i = 0;
 		$out = "";
-		while( $i < strlen($str) )
+		while( $i < strlen((string)$str) )
 		{
-			if( strlen($out) )
+			if( strlen((string)$out) )
 				$out.="||";
 			$out.= "to_clob('".$this->addSlashes( substr($str, $i, $ora_maxstring) )."')";
 			$i += $ora_maxstring;

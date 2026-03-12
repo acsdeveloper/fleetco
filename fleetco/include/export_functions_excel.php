@@ -1,136 +1,136 @@
 <?php
-function ExportExcelInit($arrdata,$arrwidth)
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
+
+function ExportExcelInit($arrdata, $arrwidth)
 {
 	global $cCharset;
-	$objPHPExcel = new PHPExcel();
-	$objProp = $objPHPExcel->getProperties();
-	$objProp->setCreator("PHP");
+	$objPHPExcel = new Spreadsheet();
+	$objPHPExcel->getProperties()->setCreator("PHP");
 	$objASIndex = $objPHPExcel->setActiveSheetIndex(0);
 	$objASIndex->setTitle("Export");
 	$col = 0;
-	foreach($arrdata as $field=>$data)
+	foreach ($arrdata as $field => $data)
 	{
-		$data = PHPExcel_Shared_String::ConvertEncoding($data, 'UTF-8', $cCharset);
-		if(substr($data,0,1) == '=')
-			$data = '="' . str_replace('"','""',$data) . '"';
-		$objASIndex->setCellValueByColumnAndRow($col,1,$data);
-		$colLetter = PHPExcel_Cell::stringFromColumnIndex($col);
-		$objASheet = $objPHPExcel->getActiveSheet();
-		$objDim = $objASheet->getColumnDimension($colLetter);
-		$objDim->setWidth($arrwidth[$field]);
+		$data = mb_convert_encoding((string)$data, 'UTF-8', $cCharset ?: 'UTF-8');
+		if (substr($data, 0, 1) == '=')
+			$data = '="' . str_replace('"', '""', $data) . '"';
+		$colLetter = Coordinate::stringFromColumnIndex($col + 1);
+		$objASIndex->setCellValue($colLetter . '1', $data);
+		$objASIndex->getColumnDimension($colLetter)->setWidth($arrwidth[$field]);
 		$col++;
 	}
 
 	return $objPHPExcel;
 }
 
-function ExportExcelRecord($arrdata, $datatype, $numberRow, $objPHPExcel,$pageObj)
+function ExportExcelRecord($arrdata, $datatype, $numberRow, $objPHPExcel, $pageObj)
 {
 	global $cCharset, $locale_info;
 	$col = -1;
 	$objASIndex = $objPHPExcel->setActiveSheetIndex(0);
-	$objASheet = $objPHPExcel->getActiveSheet();
-	$rowDim = $objASIndex->getRowDimension($numberRow+1);
-	
-	foreach($arrdata as $field => $data)
+	$objASheet  = $objPHPExcel->getActiveSheet();
+	$rowDim     = $objASIndex->getRowDimension($numberRow + 1);
+
+	foreach ($arrdata as $field => $data)
 	{
 		$col++;
-		$colLetter = PHPExcel_Cell::stringFromColumnIndex($col);
-		$colDim = $objASIndex->getColumnDimension($colLetter);
-		if($datatype[$field] == "binary")
+		$colLetter = Coordinate::stringFromColumnIndex($col + 1);
+		$colDim    = $objASIndex->getColumnDimension($colLetter);
+
+		if ($datatype[$field] == "binary")
 		{
-			if(!$data)
+			if (!$data)
 				continue;
-			if(!function_exists("imagecreatefromstring"))
+			if (!function_exists("imagecreatefromstring"))
 			{
-				$objASIndex->setCellValueByColumnAndRow($col,$numberRow+1,mlang_message("LONG_BINARY"));
+				$objASIndex->setCellValue($colLetter . ($numberRow + 1), mlang_message("LONG_BINARY"));
 				continue;
 			}
 			$error_handler = set_error_handler("empty_error_handler");
 			$gdImage = imagecreatefromstring($data);
-			if($error_handler)
+			if ($error_handler)
 				set_error_handler($error_handler);
-			if($gdImage)
+			if ($gdImage)
 			{
-				$objDrawing = new PHPExcel_Worksheet_MemoryDrawing();
+				$objDrawing = new MemoryDrawing();
 				$objDrawing->setImageResource($gdImage);
-				$objDrawing->setCoordinates($colLetter.($row+1));
+				$objDrawing->setCoordinates($colLetter . ($numberRow + 1));
 				$objDrawing->setWorksheet($objASheet);
-				
-				$width = $objDrawing->getWidth()*0.143;
-				$height = $objDrawing->getHeight()*0.75;
-				
-				if($rowDim->getRowHeight() < $height)
+
+				$width  = $objDrawing->getWidth() * 0.143;
+				$height = $objDrawing->getHeight() * 0.75;
+
+				if ($rowDim->getRowHeight() < $height)
 					$rowDim->setRowHeight($height);
-				
-				$colDimSh = $objASheet->getColumnDimension($colLetter);
-				$colDimSh->setAutoSize(false);
-				
-				if($colDim->getWidth() < $width)
+
+				$objASheet->getColumnDimension($colLetter)->setAutoSize(false);
+
+				if ($colDim->getWidth() < $width)
 					$colDim->setWidth($width);
 			}
 		}
-		elseif($datatype[$field] == "file")
+		elseif ($datatype[$field] == "file")
 		{
 			$arr = my_json_decode($row[$field]);
-			if(count($arr) == 0)
+			if (count($arr) == 0)
 			{
-				$data = PHPExcel_Shared_String::ConvertEncoding($data, 'UTF-8', $cCharset);
-				if($data == "<img src=\"images/no_image.gif\" />")
-					$arr[]=array("name"=>"images/no_image.gif");
+				$data = mb_convert_encoding((string)$data, 'UTF-8', $cCharset ?: 'UTF-8');
+				if ($data == "<img src=\"images/no_image.gif\" />")
+					$arr[] = array("name" => "images/no_image.gif");
 				else
 				{
-					if(substr($data,0,1) == '=')
-						$data = '="' . str_replace('"','""',$data) . '"';
-					$objASIndex->setCellValueByColumnAndRow($col,$numberRow+1,$data);
+					if (substr($data, 0, 1) == '=')
+						$data = '="' . str_replace('"', '""', $data) . '"';
+					$objASIndex->setCellValue($colLetter . ($numberRow + 1), $data);
 					continue;
 				}
 			}
 			$offsetY = 0;
-			$height = 0;
-			foreach($arr as $img)
+			$height  = 0;
+			foreach ($arr as $img)
 			{
-				
-				if(!file_exists($img["name"]) || !$img["name"])
+				if (!file_exists($img["name"]) || !$img["name"])
 				{
-					$data = PHPExcel_Shared_String::ConvertEncoding($data, 'UTF-8', $cCharset);
-					if(substr($data,0,1) == '=')
-						$data = '="' . str_replace('"','""',$data) . '"';
-					$objASIndex->setCellValueByColumnAndRow($col,$numberRow+1,$data);
+					$data = mb_convert_encoding((string)$data, 'UTF-8', $cCharset ?: 'UTF-8');
+					if (substr($data, 0, 1) == '=')
+						$data = '="' . str_replace('"', '""', $data) . '"';
+					$objASIndex->setCellValue($colLetter . ($numberRow + 1), $data);
 					continue;
 				}
-				$objDrawing = new PHPExcel_Worksheet_Drawing();
+				$objDrawing = new Drawing();
 				$objDrawing->setPath($img["name"]);
-				$objDrawing->setCoordinates($colLetter.($numberRow+1));
+				$objDrawing->setCoordinates($colLetter . ($numberRow + 1));
 				$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
-				
 				$objDrawing->setOffsetY($offsetY);
-				
-				$width = $objDrawing->getWidth()*0.143;
-				$height = $height + $objDrawing->getHeight()*0.75;
+
+				$width   = $objDrawing->getWidth() * 0.143;
+				$height  = $height + $objDrawing->getHeight() * 0.75;
 				$offsetY = $offsetY + $objDrawing->getHeight();
-				
-				if($rowDim->getRowHeight() < $height)
+
+				if ($rowDim->getRowHeight() < $height)
 					$rowDim->setRowHeight($height);
-				
-				$colDimSh = $objASheet->getColumnDimension($colLetter);
-				$colDimSh->setAutoSize(false);
-				
-				if($colDim->getWidth() < $width)
+
+				$objASheet->getColumnDimension($colLetter)->setAutoSize(false);
+
+				if ($colDim->getWidth() < $width)
 					$colDim->setWidth($width);
 			}
 		}
 		else
 		{
-			$data = PHPExcel_Shared_String::ConvertEncoding($data, 'UTF-8', $cCharset);
-			if(substr($data,0,1) == '=')
-				$data = '="' . str_replace('"','""',$data) . '"';
-			$objASIndex->setCellValueByColumnAndRow($col,$numberRow+1,$data);
-			if($datatype[$field] == "date")
+			$data = mb_convert_encoding((string)$data, 'UTF-8', $cCharset ?: 'UTF-8');
+			if (substr($data, 0, 1) == '=')
+				$data = '="' . str_replace('"', '""', $data) . '"';
+			$objASIndex->setCellValue($colLetter . ($numberRow + 1), $data);
+			if ($datatype[$field] == "date")
 			{
-				$objStyle = $objASIndex->getStyle($colLetter.($numberRow+1));
-				$objNumFrm = $objStyle->getNumberFormat();
-				$objNumFrm->setFormatCode($locale_info["LOCALE_SSHORTDATE"]." hh:mm:ss");
+				$objASIndex->getStyle($colLetter . ($numberRow + 1))
+					->getNumberFormat()
+					->setFormatCode($locale_info["LOCALE_SSHORTDATE"] . " hh:mm:ss");
 			}
 		}
 	}
@@ -139,28 +139,36 @@ function ExportExcelRecord($arrdata, $datatype, $numberRow, $objPHPExcel,$pageOb
 function ExportExcelTotals($arrTotal, $arrTotalMessage, $row, $objPHPExcel)
 {
 	global $cCharset;
-	$col = 0;
+	$col      = 1;
 	$objASIndex = $objPHPExcel->setActiveSheetIndex(0);
-	foreach($arrTotal as $key => $value)
+	foreach ($arrTotal as $key => $value)
 	{
-		if($value)
-			$objASIndex->setCellValueByColumnAndRow($col,$row+1,$arrTotalMessage[$key].PHPExcel_Shared_String::ConvertEncoding($value, 'UTF-8', $cCharset));
+		if ($value)
+		{
+			$colLetter = Coordinate::stringFromColumnIndex($col);
+			$objASIndex->setCellValue(
+				$colLetter . ($row + 1),
+				$arrTotalMessage[$key] . mb_convert_encoding((string)$value, 'UTF-8', $cCharset ?: 'UTF-8')
+			);
+		}
 		$col++;
 	}
 }
-function ExportExcelSave($filename,$format,$objPHPExcel)
+
+function ExportExcelSave($filename, $format, $objPHPExcel)
 {
 	global $cCharset;
-	$filename = PHPExcel_Shared_String::ConvertEncoding($filename, 'UTF-8', $cCharset);
-	if($format == "Excel2007")
+	$filename     = mb_convert_encoding((string)$filename, 'UTF-8', $cCharset ?: 'UTF-8');
+	$writerFormat = ($format === 'Excel2007') ? 'Xlsx' : 'Xls';
+
+	if ($format == "Excel2007")
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	else
 		header('Content-Type: application/vnd.ms-excel');
-	
-	header('Content-Disposition: attachment;filename="'.$filename.'";');
-	header('Cache-Control: max-age=0');	
-	
-	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $format);
-	$objWriter->save('php://output'); 
+
+	header('Content-Disposition: attachment;filename="' . $filename . '";');
+	header('Cache-Control: max-age=0');
+
+	$objWriter = IOFactory::createWriter($objPHPExcel, $writerFormat);
+	$objWriter->save('php://output');
 }
-?>

@@ -119,7 +119,7 @@ class PrintPage_Details extends PrintPage
 			else 
 				$mValue = make_db_value( $key, $this->printMasterKeys[$i], "", "", $this->tName);
 				
-			if(strlen($mValue) != 0)
+			if(strlen((string)$mValue) != 0)
 				$where.= $this->getFieldSQLDecrypt( $key ) . "=" . $mValue;
 			else 
 				$where.= "1=0";

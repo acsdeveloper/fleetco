@@ -100,7 +100,7 @@ class MySQLiConnection extends Connection
 			$this->subqueriesSupported = false;
 		
 		$res = @mysqli_query($this->conn, "SELECT @@SESSION.sql_mode as mode");
-		if( $row = @mysqli_fetch_array($res, MYSQL_ASSOC) ){
+		if( $row = @mysqli_fetch_array($res, MYSQLI_ASSOC) ){
 			$sql_mode = $row["mode"];
 			$arr = array();
 			$arr = explode(",",$sql_mode);

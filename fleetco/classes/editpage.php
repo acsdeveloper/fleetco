@@ -1100,7 +1100,7 @@ class EditPage extends RunnerPage
 	{
 		foreach($this->keys as $kValue)
 		{
-			if( strlen($kValue) )
+			if( strlen((string)$kValue) )
 				return true;
 		}
 		return false;

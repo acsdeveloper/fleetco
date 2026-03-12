@@ -51,7 +51,7 @@ class PostgreFunctions extends DBFunctions
 		if( $this->postgreDbVersion < 9 )
 			return "'".pg_escape_bytea($str)."'";
 		
-		if( !strlen($str) )
+		if( !strlen((string)$str) )
 			return "''";
 			
 		return "E'\\\\x".bin2hex($str)."'";

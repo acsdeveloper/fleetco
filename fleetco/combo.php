@@ -5,7 +5,7 @@ $cCharset = "utf-8";
 
 $queryString = getQueryString();
 
-if (!isset($queryString) || strlen($queryString) == 0) {
+if (!isset($queryString) || strlen((string)$queryString) == 0) {
 	return;
 }
 $yuiFiles    = explode("&", $queryString);

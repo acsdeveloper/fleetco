@@ -26,7 +26,7 @@ class ViewVideoFileField extends ViewFileField
 		$value = "";
 		$fieldIsUrl = $this->container->pSet->isVideoUrlField($this->field);
 		$fileName = $data[$this->field];
-		if (strlen($fileName))
+		if (strlen((string)$fileName))
 		{
 			if(!$fieldIsUrl)
 			{

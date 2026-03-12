@@ -333,7 +333,7 @@ class RightsPage extends ListPage
 		{
 			$table = @$tbl["table"];
 			$parent = @$tbl["parent"];
-			if( strlen($table) )
+			if( strlen((string)$table) )
 			{
 				$caption = $this->tables[$table][1];
 				$shortTable = $this->tables[$table][0];
@@ -393,14 +393,14 @@ class RightsPage extends ListPage
 				$row["groupControlState"] = " data-state='closed'";
 				$row["groupControlClass"] = " data-state='closed'";
 				$row["tblrowclass"] .= " menugroup";
-				if( !strlen($table) )
+				if( !strlen((string)$table) )
 				{
 					//	the item is just a group
 					//	add the class to hide it in alpha mode
 					$row["tblrowclass"] .= " menugrouponly";
 				}
 			}
-			else if( !strlen($table) )
+			else if( !strlen((string)$table) )
 			{
 				// empty menu group
 				continue;
@@ -499,7 +499,7 @@ class RightsPage extends ListPage
 	function fixMask($mask, $possibleMask)
 	{
 		$outMask = "";
-		$l = strlen($possibleMask);
+		$l = strlen((string)$possibleMask);
 		for($i=0; $i < $l; ++$i)
 		{
 			if(strpos($mask, $possibleMask[$i]) !== FALSE)
@@ -561,7 +561,7 @@ class RightsPage extends ListPage
 			}
 			$mask = $correctedMask;
 
-			if( strlen($mask) )
+			if( strlen((string)$mask) )
 				$sql = "update ". $rightWTableName ." set ". $accessMaskWFieldName ."='". $mask ."' where ". $groupWhere;
 
 			else
@@ -570,7 +570,7 @@ class RightsPage extends ListPage
 		}
 		else
 		{
-			if( !strlen($mask) )
+			if( !strlen((string)$mask) )
 				return;
 
 			$sql = "insert into ". $rightWTableName ." (". $groupisWFieldName .", ".$tableNameWFieldName.", ". $accessMaskWFieldName .")"
