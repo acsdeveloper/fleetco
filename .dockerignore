@@ -1,0 +1,6 @@
+.git
+.github
+vendor
+fleetco/templates_c
+fleetco/files
+*.md
