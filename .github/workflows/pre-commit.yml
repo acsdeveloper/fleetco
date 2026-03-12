@@ -1,0 +1,49 @@
+name: Pre-commit Checks
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - master
+  push:
+    branches:
+      - dev
+
+jobs:
+  lint:
+    name: PHP Syntax Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Check PHP syntax
+        run: |
+          find fleetco -name "*.php" -not -path "*/vendor/*" -print0 \
+            | xargs -0 -P4 php -l \
+            | grep -v "No syntax errors" \
+            | tee /tmp/lint.log
+          if [ -s /tmp/lint.log ]; then
+            echo "PHP syntax errors found!"
+            exit 1
+          fi
+
+      - name: Check for debug statements
+        run: |
+          if grep -rn --include="*.php" \
+            -e "var_dump(" \
+            -e "print_r(" \
+            -e "die(" \
+            fleetco/ --exclude-dir=vendor; then
+            echo "Debug statements found — remove before merging."
+            exit 1
+          fi
