@@ -1,44 +1,122 @@
-#Features
-* Fueling Record Maintenance
-* Repair Record Maintenance
-* Maintenance Record Maintenance
-* Inventory Module
-* Accident Reporting
-* Fuel Efficiency Reports
-* Vehicle Expense Reports
+# FleetCo - Fleet Management System
 
-##System requirements:
-* Web Hosting (XAMPP/WAMP can also be used)
-* PHP 4.2
-* MySQL Database
-* GPLv3 license
+A web-based fleet management system for tracking vehicles, fuel, maintenance, inventory, accidents, and renewals.
 
+## Features
 
-##How to install
-1. Unzip the file
-2. Upload the file to the hosting root ot folder 
-3. Create a MySQL database using phpmyadmin or otherwise
-3. In the unzip folder, locate the SQL dump file called mysql-dump-with dummy-data.sql.
-4. Import this SQL dump to the database created (This database contains some sample data which you can delete later)
-5. Enter the database connectivity details as follows:
+- Vehicle master records and reporting
+- Fuel record maintenance and efficiency reports
+- Maintenance records (regular service, general repair, accident repair)
+- Inventory module with GRN (Goods Received Note) workflows
+- Accident reporting
+- Insurance management (claims, payments, companies)
+- Renewal tracking (vehicle renewals, other renewals)
+- Vehicle expense reports
+- User management with role-based access control
 
-Find "ConnectionManager.php" in connections folder and on line 254-258 find below block of code:
+## Requirements
 
-		$data["connInfo"][0] = "database_host_name";
-		$data["connInfo"][1] = "database_user_name";
-		$data["connInfo"][2] = "database_user_password";
-		$data["connInfo"][3] = "database_port_number";
-		$data["connInfo"][4] = "database_name";
+- PHP 8.1+
+- MySQL 8.0+
+- Composer
 
-Update your database connectivity details above
+## Quick Start with Docker
 
-6. Then visit the url and the login screen should appear
-7. Use following admin logins:
+The easiest way to run FleetCo is with Docker Compose.
 
-Username: Admin
-Password: AdminF123
+**1. Clone the repository**
+```bash
+git clone https://github.com/acsdeveloper/fleetco.git
+cd fleetco
+```
 
-Once you log in, go to Admin Area. You can create any no of users with various user rights to different tables.
+**2. Start the stack**
+```bash
+make up
+```
 
-Originally created by Vishan Fernando.
+The app will be available at [http://localhost:8080](http://localhost:8080).
 
+**3. Import the database**
+```bash
+make db-restore < fleetco/mysql-dump-with\ dummy-data.sql
+```
+
+Or import manually via the MySQL shell:
+```bash
+make db-shell
+```
+
+### Docker environment variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `APP_PORT` | `8080` | Host port to expose the app on |
+| `DB_NAME` | `fleetco` | MySQL database name |
+| `DB_USER` | `fleetco` | MySQL user |
+| `DB_PASSWORD` | `fleetco` | MySQL user password |
+| `DB_ROOT_PASSWORD` | `rootpassword` | MySQL root password |
+
+### Available make commands
+
+```bash
+make help         # List all commands
+make build        # Build production image
+make up           # Start production stack
+make dev          # Start development stack (with Xdebug)
+make down         # Stop containers
+make logs         # Tail app logs
+make shell        # Open shell in app container
+make db-shell     # Open MySQL shell
+make db-dump      # Dump database to backup.sql
+make db-restore   # Restore database from backup.sql
+make lint         # Check PHP syntax on all files
+```
+
+## Manual Installation (without Docker)
+
+**1. Install PHP dependencies**
+```bash
+composer install --no-dev --optimize-autoloader
+```
+
+**2. Create a MySQL database and import the dump**
+```sql
+CREATE DATABASE fleetco;
+```
+```bash
+mysql -u root -p fleetco < fleetco/mysql-dump-with\ dummy-data.sql
+```
+
+**3. Configure the database connection**
+
+Edit `fleetco/connections/ConnectionManager.php` lines 254–258:
+```php
+$data["connInfo"][0] = "localhost";       // host
+$data["connInfo"][1] = "db_username";     // username
+$data["connInfo"][2] = "db_password";     // password
+$data["connInfo"][3] = "3306";            // port
+$data["connInfo"][4] = "fleetco";         // database name
+```
+
+**4. Point your web server document root** to `/path/to/fleetco/fleetco/`
+
+**5. Visit the app** and log in with the default admin credentials:
+
+> **Username:** `admin`
+> **Password:** `AdminF123`
+
+**Change the default password immediately after first login.**
+
+## Development
+
+Start the dev stack with Xdebug enabled:
+```bash
+make dev
+```
+
+The source directory is mounted into the container, so changes are reflected instantly without rebuilding.
+
+## License
+
+GPLv3 — Originally created by Vishan Fernando.
