@@ -163,12 +163,12 @@ class EditControl
 			$this->ctype="type".$fieldNum."_".$this->goodFieldName."_".$this->id;
 		}
 
-		$this->iquery = "field=".rawurlencode($this->field);
-	
+		$this->iquery = "field=".rawurlencode((string)($this->field ?? ''));
+
 		$arrKeys = $this->pageObject->pSetEdit->getTableKeys();
-		for ($j = 0; $j < count($arrKeys); $j++) 
+		for ($j = 0; $j < count($arrKeys); $j++)
 		{
-			$this->keylink .= "&key".($j+1)."=".rawurlencode($data[$arrKeys[$j]]);
+			$this->keylink .= "&key".($j+1)."=".rawurlencode((string)($data[$arrKeys[$j]] ?? ''));
 		}
 		$this->iquery .= $this->keylink;
 					
@@ -307,7 +307,7 @@ class EditControl
 		if( $baseResult != "" )
 			return $baseResult;
 		
-		if( !strlen($SearchFor) && !strlen($SearchFor2) )
+		if( !strlen((string)$SearchFor) && !strlen((string)$SearchFor2) )
 			return "";
 		
 		$value1 = $this->pageObject->cipherer->MakeDBValue($this->field, $SearchFor, $etype, true);
@@ -337,9 +337,9 @@ class EditControl
 			
 			if( !$this->pageObject->cipherer->isFieldPHPEncrypted($this->field) && $searchIsCaseInsensitive )
 			{
-				if ( strlen($SearchFor) )
+				if ( strlen((string)$SearchFor) )
 					$value1 = $this->connection->upper( $value1 );
-				if ( strlen($SearchFor2) )
+				if ( strlen((string)$SearchFor2) )
 					$value2 = $this->connection->upper( $value2 );
 				$gstrField = $this->connection->upper( $gstrField );
 			}
@@ -399,12 +399,12 @@ class EditControl
 		if( $strSearchOption == "Between" )
 		{
 			$betweenRange = array();
-			if ( $value1 !== "null" && strlen($SearchFor) )
+			if ( $value1 !== "null" && strlen((string)$SearchFor) )
 			{
 				$betweenRange["from"] = $gstrField.">=".$value1;
 			}
 
-			if ( $value2 !== "null" && strlen($SearchFor2) )
+			if ( $value2 !== "null" && strlen((string)$SearchFor2) )
 			{
 				if (IsDateFieldType($this->type))
 				{
@@ -559,7 +559,7 @@ class EditControl
 	{
 		$SuggestStringSize = GetGlobalData("suggestStringSize", 40);
 		
-		if( $SuggestStringSize <= runner_strlen($searchFor) )
+		if( $SuggestStringSize <= runner_strlen((string)$searchFor) )
 		{
 			$response[ "_".$searchFor ] = $searchFor;
 			return;
@@ -571,11 +571,11 @@ class EditControl
 			$dotPosition = strpos($value, '.'); 
 			if($dotPosition !== FALSE)
 			{
-				for($i = strlen($value) - 1; $i > $dotPosition; $i--) 
+				for($i = strlen((string)$value) - 1; $i > $dotPosition; $i--) 
 				{
 					if(substr($value, $i, 1) != '0')
 					{
-						if($i < strlen($value) - 1)
+						if($i < strlen((string)$value) - 1)
 							$value = substr($value, 0, $i + 1);
 						break;
 					}
@@ -611,7 +611,7 @@ class EditControl
 		}
 		
 		// if large string cut value and add dots
-		if( $SuggestStringSize < runner_strlen($value) )
+		if( $SuggestStringSize < runner_strlen((string)$value) )
 		{
             $startPos = 0;
             $valueLength = 0;
@@ -634,7 +634,7 @@ class EditControl
 	 */
 	function cutStr($value, $searchFor, $SuggestStringSize, &$startPos, &$valueLength)
 	{
-		$diffLength = $SuggestStringSize - runner_strlen($searchFor);
+		$diffLength = $SuggestStringSize - runner_strlen((string)$searchFor);
 		$leftContextLength = floor($diffLength / 2);
 		$rigthContextLength = $diffLength - $leftContextLength;
 
@@ -648,7 +648,7 @@ class EditControl
 				$startPos = runner_strpos($value, $searchFor);
 
 		$searchStartPos = $startPos;
-		$valueLength = runner_strlen($value);
+		$valueLength = runner_strlen((string)$value);
 		if( $startPos < $leftContextLength )
 		{
 				$rigthContextLength -= $startPos - $leftContextLength;
