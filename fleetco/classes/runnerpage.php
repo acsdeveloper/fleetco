@@ -2,8 +2,9 @@
 include_once(getabspath("classes/files.php"));
 
 /**
- * Abstract base class for all pages. Contains main functionality 
+ * Abstract base class for all pages. Contains main functionality
  */
+#[\AllowDynamicProperties]
 class RunnerPage
 {
 	/**
@@ -1712,7 +1713,7 @@ class RunnerPage
 			return array();
 		
 		$strWhere = SecuritySQL("Search", $mTName);
-		if( strlen($strWhere) )
+		if( strlen((string)$strWhere) )
 			$where.= " and ".$strWhere;
 		
 		$masterQuery = $mPSet->getSQLQuery();
@@ -1859,11 +1860,11 @@ class RunnerPage
 		$masterQuery = $settings->getSQLQuery();
 		
 		$str = SecuritySQL("Search", $this->masterTable);
-		if(strlen($str))
+		if(strlen((string)$str))
 			$where.= " and ".$str;
 		
 		$strWhere = whereAdd($masterQuery->WhereToSql(),$where);
-		if(strlen($strWhere))
+		if(strlen((string)$strWhere))
 			$strWhere = " where ".$strWhere." ";
 		$strSQL = $masterQuery->HeadToSql().' '.$masterQuery->FromToSql().$strWhere.$masterQuery->TailToSql();
 		LogInfo($strSQL);
@@ -1946,7 +1947,7 @@ class RunnerPage
 	 */	
 	function &getMenuNodes($name = 'main')
 	{
-		if(!count($this->menuNodes[$name]))
+		if(empty($this->menuNodes[$name]))
 		{
 			global $menuNodesObject;
 			$menuNodesObject  = &$this;
@@ -2060,12 +2061,12 @@ class RunnerPage
 	{
 		if($pageType == "WebReports")
 			return true;
-		if(!strlen($tName))
+		if(!strlen((string)$tName))
 			return false;
 		$type = $this->getPermisType($pageType);
 		$strPerm = GetUserPermissions($tName);
 		
-		if( !strlen($type) ) //temporary #9784 fix
+		if( !strlen((string)$type) ) //temporary #9784 fix
 			return false;
 		
 		if(strpos($strPerm, $type) !== false)
@@ -2171,7 +2172,7 @@ class RunnerPage
 		if( !$sessionPrefix )
 			$sessionPrefix = $this->sessionPrefix;
 		
-		$prefixLength =	strlen($sessionPrefix);	
+		$prefixLength =	strlen((string)$sessionPrefix);	
 			
 		$sess_unset = array();
 		
@@ -2498,7 +2499,7 @@ class RunnerPage
 	{
 		$displayField = $pSet->getDisplayField($field);
 		
-		if(strlen($displayField) && !$pSet->getCustomDisplay( $field ))
+		if(strlen((string)$displayField) && !$pSet->getCustomDisplay( $field ))
 			return $connection->addFieldWrappers( $displayField );
 		
 		return $displayField;
@@ -2661,7 +2662,7 @@ class RunnerPage
 			return false;
 			
 		$fVal = "";
-		if( strlen($vals[ $fName ]) )
+		if( strlen((string)$vals[ $fName ]) )
 			$fVal = $vals[ $fName ];
 		
 		if( $this->pageType == PAGE_EDIT && $this->pSet->multiSelect($fName) )
@@ -2746,7 +2747,7 @@ class RunnerPage
 			else 
 			{
 				$defaultValue = GetDefaultValue($cData['main'], PAGE_SEARCH);
-				if( strlen($defaultValue) )			
+				if( strlen((string)$defaultValue) )			
 					$parentsFieldsData[ $cData['main'] ] = $defaultValue;	
 			}
 		}
@@ -2891,7 +2892,7 @@ class RunnerPage
 		if( $this->getLayoutVersion() == BOOTSTRAP_LAYOUT )
 			return;
 		$toolTipText = GetFieldToolTip( GoodFieldname($this->tName), GoodFieldname($fName) );
-		if( strlen($toolTipText) ) 
+		if( strlen((string)$toolTipText) ) 
 			$this->controlsMap['toolTips'][$fName] = $toolTipText;
 	}
 	
@@ -3170,7 +3171,7 @@ class RunnerPage
 								 'showSec'=>$timeAttrs["showSeconds"],
 								 'minutes'=>$timeAttrs["minutes"]);
 			
-			if(count($tpVal['dbtime'])>0)
+			if(count($tpVal['dbtime'] ?? [])>0)
 				$timePickSet['hover'] = array('0'=>$tpVal['dbtime'][3],'1'=>$tpVal['dbtime'][4],'2'=>$tpVal['dbtime'][5]);
 			
 			if(!array_key_exists($field,$this->jsSettings['tableSettings'][$this->tName]['fieldSettings']))	
@@ -3913,7 +3914,7 @@ class RunnerPage
 		foreach ($geoData["addressFields"] as $field )
 		{
 			$addressField = trim($values[$field]);
-			if ( isset($values[$field]) && strlen($addressField) )
+			if ( isset($values[$field]) && strlen((string)$addressField) )
 			{
 				$address .= $addressField . " ";
 			}
@@ -4213,7 +4214,7 @@ class RunnerPage
 			$where = whereAdd($where, $whereComponents["searchWhere"]);
 			$_SESSION[$this->sessionPrefix."_where"] = $where;
 		}
-		elseif( !$onDash && !strlen($where) )
+		elseif( !$onDash && !strlen((string)$where) )
 		{
 			$where = SecuritySQL($securityMode, $this->tName);		
 		}
@@ -4738,7 +4739,7 @@ class RunnerPage
 		$securityClause = SecuritySQL("Search", $dDataSourceTable);
 		
 		// add where 
-		if(strlen($securityClause))
+		if(strlen((string)$securityClause))
 			$dSqlWhere = whereAdd($dSqlWhere, $securityClause);
 			
 		$masterwhere = "";
@@ -5608,7 +5609,7 @@ class RunnerPage
 					$mValue = $this->cipherer->MakeDBValue($this->detailKeysByM[$i], $_SESSION[$this->sessionPrefix."_masterkey".($i + 1)]);
 				else 
 					$mValue = make_db_value($this->detailKeysByM[$i], $_SESSION[$this->sessionPrefix."_masterkey".($i + 1)], "", "", $this->tName);
-				if(strlen($mValue) != 0)
+				if(strlen((string)$mValue) != 0)
 					$where.= $this->getFieldSQLDecrypt( $this->detailKeysByM[$i] ) . "=" . $mValue;
 				else 
 					$where.= "1=0";
@@ -5659,8 +5660,8 @@ class RunnerPage
 		$whereComponents["joinFromPart"] = $searchObj->getCommonJoinFromParts($controls);	
 		
 		$whereComponents["searchUnionRequired"] = ( "or" === $searchObj->getCriteriaCombineType()
-			&& 0 != strlen($whereComponents["searchHaving"]) 
-			&& 0 != strlen($whereComponents["searchWhere"]) );
+			&& 0 != strlen((string)$whereComponents["searchHaving"]) 
+			&& 0 != strlen((string)$whereComponents["searchWhere"]) );
 		
 
 		$searchObj->processFiltersWhere( $connection );
@@ -6325,7 +6326,7 @@ class RunnerPage
 		$str = "";
 		foreach($keys as $k)
 		{
-			if( strlen($str) )
+			if( strlen((string)$str) )
 				$str .= ", ";
 
 			$str .= "{%". GoodFieldName( $k ). "}";
@@ -6409,7 +6410,7 @@ class RunnerPage
 		{
 			$templ = @$page_titles[ $table ][ mlang_getcurrentlang() ][ $page ];
 		}		
-		if( strlen($templ) )
+		if( strlen((string)$templ) )
 			return $templ;
 		
 		return $this->getDefaultPageTitle( $page, $table, $pSet );
@@ -6438,7 +6439,7 @@ class RunnerPage
 			if( !strcasecmp( substr($m, 0, 9), "{%master." ) )
 			{
 				$mSettings = new ProjectSettings($this->masterTable, PAGE_LIST);
-				$field = $mSettings->getFieldByGoodFieldName( trim(substr( $m, 9, strlen($m) - 10 )) );
+				$field = $mSettings->getFieldByGoodFieldName( trim(substr( $m, 9, strlen((string)$m) - 10 )) );
 				if(!$masterRecord)
 				{
 					$masterRecord = $this->getMasterRecord();
@@ -6447,7 +6448,7 @@ class RunnerPage
 			}
 			else
 			{
-				$field = $pSet->getFieldByGoodFieldName( trim(substr( $m, 2, strlen($m) - 3 )) );
+				$field = $pSet->getFieldByGoodFieldName( trim(substr( $m, 2, strlen((string)$m) - 3 )) );
 				if(!$currentRecord)
 				{
 					$currentRecord = $this->getCurrentRecord();
@@ -6583,7 +6584,7 @@ class RunnerPage
 		{
 			if($this->totalsFields[$i]['totalsType'] == 'COUNT')
 			{
-				if(0 != strlen($data[$this->totalsFields[$i]['fName']]))
+				if(0 != strlen((string)$data[$this->totalsFields[$i]['fName']]))
 					$totals[$this->totalsFields[$i]['fName']]++;
 			}
 			else if($this->totalsFields[$i]['viewFormat'] == "Time") 
@@ -7289,7 +7290,7 @@ class RunnerPage
 			
 			$crumb["crumb_title"] = $title;
 			
-			if(  $i < $firstShowPeersIndex && !count( $itemData["detailPeers"] ) || ( $this->isAdminTable() && GetGlobalData("nLoginMethod", 0) == SECURITY_AD ))
+			if(  $i < $firstShowPeersIndex && !count( $itemData["detailPeers"] ?? [] ) || ( $this->isAdminTable() && GetGlobalData("nLoginMethod", 0) == SECURITY_AD ))
 			{
 				$breadcrumbs[] = $crumb;
 				continue;
@@ -7300,7 +7301,7 @@ class RunnerPage
 			
 			$dropItems = array();
 			$peers = array();
-			$detailPeers = count( $itemData["detailPeers"] ) > 0;
+			$detailPeers = count( $itemData["detailPeers"] ?? [] ) > 0;
 			
 			if( $detailPeers  )
 				$peers = $itemData["detailPeers"];

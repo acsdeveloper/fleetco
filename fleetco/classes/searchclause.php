@@ -210,7 +210,7 @@ class SearchClause extends SearchClauseBase
 		
 		// if there are fields for build advanced where
 		$sWhere = '';
-		if( count($srchFields) )
+		if( count($srchFields ?? []) )
 		{
 			// prepare vars
 			$sWhere = $srchCriteriaCombineType=="and" ? "(1=1" : "(1=0";
@@ -267,19 +267,19 @@ class SearchClause extends SearchClauseBase
 	 */
 	protected function getSimpleSearchWhere($fieldsArr, $editControls)
 	{
-		$simpleSrch = $this->_where[ $this->sessionPrefix."_simpleSrch" ];
+		$simpleSrch = $this->_where[ $this->sessionPrefix."_simpleSrch" ] ?? '';
 		if( trim($simpleSrch) === '%' )
 			$simpleSrch = '['.$simpleSrch.']';
 		
 		$simpleSrchOption = $this->_where[ $this->sessionPrefix."simpleSrchTypeComboOpt" ];
 		
-		if( ( $simpleSrch == null || !strlen($simpleSrch) ) && $simpleSrchOption != "Empty" )
+		if( ( $simpleSrch == null || !strlen((string)$simpleSrch) ) && $simpleSrchOption != "Empty" )
 			return "";
 		
 		// build where for any field contains search
 
 		$simpleSrchField = $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ];
-		if( $simpleSrch != null && strlen($simpleSrchField) && !isset( $this->customFieldSQLConditions[ $simpleSrchField  ] ) )
+		if( $simpleSrch != null && strlen((string)$simpleSrchField) && !isset( $this->customFieldSQLConditions[ $simpleSrchField  ] ) )
 		{
 			if( !in_array($simpleSrchField, $fieldsArr)	)
 				return "";
@@ -410,12 +410,12 @@ class SearchClause extends SearchClauseBase
 		$simpleSrch = $this->_where[$this->sessionPrefix."_simpleSrch"];
 		$simpleSrchOpt = $this->_where[$this->sessionPrefix."simpleSrchTypeComboOpt"];
 
-		if( $this->haveAggregateFields && $this->advancedSearchActive || !strlen($simpleSrch) || $simpleSrchOpt != "Contains" && $simpleSrchOpt != "Starts with" )
+		if( $this->haveAggregateFields && $this->advancedSearchActive || !strlen((string)$simpleSrch) || $simpleSrchOpt != "Contains" && $simpleSrchOpt != "Starts with" )
 			return array();
 		
 		$simleSrchField = $this->_where[$this->sessionPrefix."simpleSrchFieldsComboOpt"];
 		
-		if( strlen($simleSrchField) )
+		if( strlen((string)$simleSrchField) )
 		{
 			$control = $editControls->getControl( $simleSrchField, SEARCHID_SIMPLE );
 			$clausesData = $control->getSelectColumnsAndJoinFromPart( $simpleSrch, $simpleSrchOpt, false);
@@ -510,7 +510,7 @@ class SearchClause extends SearchClauseBase
 	{
 		$start = 0;	
 		$unescapedValues = array();
-		$valueLength = strlen($fValue);
+		$valueLength = strlen((string)$fValue);
 	
 		if( !$valueLength )
 			return $unescapedValues;
@@ -673,7 +673,7 @@ class SearchClause extends SearchClauseBase
 		{
 			$simpleSrchTypeComboNot = $this->searchOptions[$simpleQueryArr[2]]["not"];
 			$this->_where[$this->sessionPrefix."simpleSrchTypeComboOpt"] = $this->searchOptions[$simpleQueryArr[2]]["option"];
-			if (!strlen($this->_where[$this->sessionPrefix."simpleSrchTypeComboOpt"]))
+			if (!strlen((string)$this->_where[$this->sessionPrefix."simpleSrchTypeComboOpt"]))
 			{
 				$this->_where[$this->sessionPrefix."simpleSrchTypeComboOpt"] = $suggestAllContent ? "Contains" : "Starts with";
 			}
@@ -870,14 +870,14 @@ class SearchClause extends SearchClauseBase
 	 */
 	function parseStringToArray($inputString, $advanced = false)
 	{
-		if(0 == strlen($inputString))
+		if(0 == strlen((string)$inputString))
 			return array();
 		$result = array();
 		$valuesArray = array();
 		$startPos = 0;
 		if($advanced)
-			$inputString = substr($inputString, 1, strlen($inputString) - 2);
-		$strLength = strlen($inputString);
+			$inputString = substr($inputString, 1, strlen((string)$inputString) - 2);
+		$strLength = strlen((string)$inputString);
 		for($i = 0; $i < $strLength; $i++)
 		{
 			if($inputString[$i] == $this->valueDelimiter)
@@ -916,7 +916,7 @@ class SearchClause extends SearchClauseBase
 			$backSlahesCount++;
 		}
 		$result = $backSlahesCount == 0 || $backSlahesCount % 2 == 0;
-		if($result && $isFieldDelimiter && strlen($inputString) > $currentPos + 1)
+		if($result && $isFieldDelimiter && strlen((string)$inputString) > $currentPos + 1)
 		{
 			return $inputString[$currentPos + 1] == $this->fieldDelimiterRight;
 		}
@@ -1227,7 +1227,7 @@ class SearchClause extends SearchClauseBase
 			return false;
 		}
 		
-		if(count($this->pSetSearch)){
+		if($this->pSetSearch){
 			$requiredSearchFields = $this->pSetSearch->getSearchRequiredFields();
 			foreach($requiredSearchFields as $fName)
 			{
@@ -1427,7 +1427,7 @@ class SearchClause extends SearchClauseBase
 		if( $this->_where[$this->sessionPrefix."_srchCriteriaCombineType"] == "or" )
 			return "or";	
 		
-		if( $this->simpleSearchActive && !count($this->_where[$this->sessionPrefix."_srchFields"]) )
+		if( $this->simpleSearchActive && !count($this->_where[$this->sessionPrefix."_srchFields"] ?? []) )
 			return "or";
 		
 		return "and";
@@ -1478,7 +1478,7 @@ class SearchClause extends SearchClauseBase
 	{
 		$fieldsData = array();
 
-		if(count($this->_where[ $this->sessionPrefix."_srchFields" ])>0){ //for asp
+		if(count($this->_where[ $this->sessionPrefix."_srchFields" ] ?? [])>0){ //for asp
 			foreach( $this->_where[ $this->sessionPrefix."_srchFields" ] as $ind => $sfData )
 			{	
 				if( !$fieldsData[ $sfData['fName'] ] )
@@ -1494,11 +1494,11 @@ class SearchClause extends SearchClauseBase
 		$simpleSrch = $this->_where[ $this->sessionPrefix."_simpleSrch" ];
 		$simpleSrchOption = $this->_where[ $this->sessionPrefix."simpleSrchTypeComboOpt" ];		
 		
-		if( ( $simpleSrch == null || !strlen($simpleSrch) ) && $simpleSrchOption != "Empty" )
+		if( ( $simpleSrch == null || !strlen((string)$simpleSrch) ) && $simpleSrchOption != "Empty" )
 			return $fieldsData;
 		
 		$simpleSrchField = $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ];
-		if( $simpleSrch != null && strlen($simpleSrchField) && in_array($simpleSrchField,  $this->googleLikeFields) )
+		if( $simpleSrch != null && strlen((string)$simpleSrchField) && in_array($simpleSrchField,  $this->googleLikeFields) )
 		{
 			if( !$fieldsData[ $simpleSrchField ] )
 				$fieldsData[ $simpleSrchField ] = array();				
@@ -1566,7 +1566,7 @@ class SearchClause extends SearchClauseBase
 		$simpleSrch = $this->_where[ $this->sessionPrefix."_simpleSrch" ];	
 		$simpleSrchOption = $this->_where[ $this->sessionPrefix."simpleSrchTypeComboOpt" ];		
 		
-		if( ( $simpleSrch == null || !strlen($simpleSrch) ) && $simpleSrchOption != "Empty" || !in_array($field, $this->googleLikeFields) )
+		if( ( $simpleSrch == null || !strlen((string)$simpleSrch) ) && $simpleSrchOption != "Empty" || !in_array($field, $this->googleLikeFields) )
 			return null;			
 		
 		$simpleSrchField = $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ];
@@ -1659,11 +1659,11 @@ class SearchClause extends SearchClauseBase
 			return "";	
 					
 		$simpleSrchOption = $this->_where[ $this->sessionPrefix."simpleSrchTypeComboOpt" ];			
-		if( strlen($simpleSrchOption) )
+		if( strlen((string)$simpleSrchOption) )
 			return $simpleSrchOption;
 			
 		$simpleSrch = $this->_where[ $this->sessionPrefix."_simpleSrch" ];
-		if( $simpleSrch == null || !strlen($simpleSrch) ) 
+		if( $simpleSrch == null || !strlen((string)$simpleSrch) ) 
 			return "";
 		
 		return CONTAINS;
@@ -1755,8 +1755,8 @@ class SearchClause extends SearchClauseBase
 			
 		$srchFields = &$this->_where[ $this->sessionPrefix."_srchFields" ];	
 		
-		if( $this->isShowSimpleSrchOpt && ( !strlen( $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] ) ||  $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] == $field ) 
-			&& $this->_where[ $this->sessionPrefix."_simpleSrch" ] == '' && ( $id == SEARCHID_SIMPLE || !count($srchFields) && is_null($id) ) )
+		if( $this->isShowSimpleSrchOpt && ( !strlen( (string)($this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] ?? '') ) ||  $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] == $field ) 
+			&& $this->_where[ $this->sessionPrefix."_simpleSrch" ] == '' && ( $id == SEARCHID_SIMPLE || !count($srchFields ?? []) && is_null($id) ) )
 		{
 			$this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] = $field;
 			$this->_where[ $this->sessionPrefix."_simpleSrch" ] = $value;
@@ -1860,8 +1860,8 @@ class SearchClause extends SearchClauseBase
 	
 		$srchFields = &$this->_where[ $this->sessionPrefix."_srchFields" ];	
 	
-		if( $this->isShowSimpleSrchOpt && ( !strlen( $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] ) ||  $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] == $field ) 
-			&& ( $id == SEARCHID_SIMPLE || !count($srchFields) && is_null($id) ) )
+		if( $this->isShowSimpleSrchOpt && ( !strlen( (string)($this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] ?? '') ) ||  $this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] == $field ) 
+			&& ( $id == SEARCHID_SIMPLE || !count($srchFields ?? []) && is_null($id) ) )
 		{
 			$this->_where[ $this->sessionPrefix."simpleSrchFieldsComboOpt" ] = $field;
 			$simpleSrchOption = $this->_where[ $this->sessionPrefix."simpleSrchTypeComboOpt" ] = $opt;

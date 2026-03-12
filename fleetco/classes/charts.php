@@ -244,7 +244,7 @@ class Chart
 			else 
 				$mValue = make_db_value( $detailKeysByM[$i], $_SESSION[ $this->sessionPrefix."_masterkey".($i + 1) ] );
 			
-			if( strlen($mValue) != 0 )
+			if( strlen((string)$mValue) != 0 )
 				$masterWhereParts[] = RunnerPage::_getFieldSQLDecrypt( $detailKeysByM[$i], $this->connection, $this->pSet, $this->cipherer )."=".$mValue;
 			else 
 				$masterWhereParts[] = "1=0";	
@@ -525,7 +525,7 @@ class Chart
 			$arrDElem = $pDSet->getDashboardElements();
 			foreach($arrDElem as $elem)
 			{
-				if( $elem["table"] == $this->chrt_array['tables'][0] && count( $elem["details"] ) )
+				if( $elem["table"] == $this->chrt_array['tables'][0] && count( $elem["details"] ?? [] ) )
 					$showClickHere = true;
 			}
 		}
@@ -643,7 +643,7 @@ class Chart
 		$viewControls = new ViewControlsContainer($this->pSet, PAGE_CHART);			
 		$value = html_special_decode( $viewControls->showDBValue( $fieldName, $data ) );
 
-		if( $truncated && strlen($value) > 50 )
+		if( $truncated && strlen((string)$value) > 50 )
 			$value = runner_substr($value, 0, 47)."...";
 			
 		return $this->chart_xmlencode( $value );
@@ -713,7 +713,7 @@ class Chart
 		else
 			$strDataSeries = $row[ $this->chrt_array['customLabels'][ $this->arrDataSeries[ $seriesNumber ] ] ];
 		
-		return array( "x" => $strLabelFormat , "value" => $this->chart_xmlencode( str_replace(",", ".", $strDataSeries) + 0 ) );
+		return array( "x" => $strLabelFormat , "value" => $this->chart_xmlencode( (float)str_replace(",", ".", $strDataSeries) ) );
 	}	
 	
 	/**
@@ -1238,7 +1238,7 @@ class Chart_Bubble extends Chart
 	protected function getPoint( $seriesNumber, $row )
 	{
 		$pointData = parent::getPoint( $seriesNumber, $row );
-		$pointData["size"] = $this->chart_xmlencode( str_replace(",", ".", $row[ $this->arrDataSize[ $seriesNumber ] ]) + 0 ); 
+		$pointData["size"] = $this->chart_xmlencode( (float)str_replace(",", ".", $row[ $this->arrDataSize[ $seriesNumber ] ]) ); 
 		
 		return $pointData;
 	}
@@ -1823,7 +1823,7 @@ class Chart_Ohlc extends Chart
 			"open" => $this->chart_xmlencode( $open + 0 ),
 			"high" => $this->chart_xmlencode( $high + 0 ),
 			"low" => $this->chart_xmlencode( $low + 0 ),
-			"close" => $this->chart_xmlencode( str_replace(",", ".", $close) + 0 )
+			"close" => $this->chart_xmlencode( (float)str_replace(",", ".", $close) )
 		);
 	}
 }

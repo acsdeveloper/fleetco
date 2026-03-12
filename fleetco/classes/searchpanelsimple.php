@@ -56,7 +56,7 @@ class SearchPanelSimple extends SearchPanel {
 			$searchforAttrs .= " autocomplete=off ";		
 	
 		$searchforAttrs.= ' placeholder="'.mlang_message("SEARCH_TIP").'"';
-		if( $this->searchClauseObj->isUsedSrch() || strlen( $searchGlobalParams["simpleSrch"] ) )
+		if( $this->searchClauseObj->isUsedSrch() || strlen( (string)($searchGlobalParams["simpleSrch"] ?? '') ) )
 		{
 			$valSrchFor = $searchGlobalParams["simpleSrch"];
 			$searchforAttrs.= " value=\"".runner_htmlspecialchars($valSrchFor)."\"";

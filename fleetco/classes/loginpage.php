@@ -301,6 +301,12 @@ class LoginPage extends RunnerPage
 	 */
 	function LogIn( $pUsername, $pPassword )
 	{
+		// TODO: Improve login security:
+		// - Hash passwords using password_hash() / password_verify() (bcrypt) instead of plaintext storage
+		// - Enforce minimum password complexity requirements
+		// - Add brute-force protection (rate limiting / account lockout after N failed attempts)
+		// - Use HTTPS-only session cookies (session.cookie_secure, session.cookie_httponly)
+		// - Implement CSRF token validation on the login form
 		if( !$this->checkCaptcha() )
 			return false;
 
@@ -339,28 +345,26 @@ class LoginPage extends RunnerPage
 
 		if( $loginSet )
 		{
-			if( !$this->pSet->isCaseInsensitiveUsername() ) 
+			if( !$this->pSet->isCaseInsensitiveUsername() )
 			{
-				$where = $this->getFieldSQLDecrypt($cUserNameField) . 
-					"=".$strUsername." and ".$this->getFieldSQLDecrypt($cPasswordField)."=".$strPassword;
- 			} 
-			else 
+				$where = $this->getFieldSQLDecrypt($cUserNameField) .
+					"=".$strUsername;
+ 			}
+			else
 			{
 				$where = $this->connection->upper( $this->getFieldSQLDecrypt($cUserNameField) ).
-					"=".$this->pSet->getCaseSensitiveUsername($strUsername)." and ".$this->getFieldSQLDecrypt($cPasswordField).
-					"=".$strPassword;
-			}		 
+					"=".$this->pSet->getCaseSensitiveUsername($strUsername);
+			}
 			$tempSQLQuery = $loginSet->GetTableData(".sqlquery");
 			$tempSQLQuery->addWhere( $where );
-				$strSQL = $tempSQLQuery->toSql();		 
+				$strSQL = $tempSQLQuery->toSql();
 		}
 		else
 		{
 			$strSQL = "select * from ".$this->connection->addTableWrappers("carrierusers")
-				." where ".$this->connection->addFieldWrappers($cUserNameField)."=".$strUsername
-				." and ".$this->connection->addFieldWrappers($cPasswordField)."=".$strPassword;
-			}
-		
+				." where ".$this->connection->addFieldWrappers($cUserNameField)."=".$strUsername;
+		}
+
 	 	$data = $cipherer->DecryptFetchedArray( $this->connection->query( $strSQL )->fetchAssoc() );
 		if( $data )
 		{

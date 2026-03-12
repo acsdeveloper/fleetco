@@ -76,7 +76,7 @@ class ImportPage extends RunnerPage
 	 */
 	public function process()
 	{
-		if( !strlen($this->action) )
+		if( !strlen((string)$this->action) )
 			$this->removeOldTemporaryFiles();
 			
 		//	Before Process event
@@ -338,7 +338,7 @@ class ImportPage extends RunnerPage
 			$elems = parceCSVLine( $line, $delimiter );
 			foreach($elems as $idx => $elem)
 			{
-				if( isset($fieldsData[ $idx ]) && $fieldsData[ $idx ]["dateTimeType"] && !strlen($dateFormat) )
+				if( isset($fieldsData[ $idx ]) && $fieldsData[ $idx ]["dateTimeType"] && !strlen((string)$dateFormat) )
 					$dateFormat = ImportPage::extractDateFormat( $elem );
 			}
 		}
@@ -419,7 +419,7 @@ class ImportPage extends RunnerPage
 			$elems = parceCSVLine( $line, $delimiter, true );
 			foreach($elems as $idx => $elem)
 			{
-				if( isset($fieldsData[ $idx ]) && $fieldsData[ $idx ]["dateTimeType"] && !strlen($dateFormat) )
+				if( isset($fieldsData[ $idx ]) && $fieldsData[ $idx ]["dateTimeType"] && !strlen((string)$dateFormat) )
 					$dateFormat = ImportPage::extractDateFormat( $elem );
 			}
 		}
@@ -631,7 +631,7 @@ class ImportPage extends RunnerPage
 		
 		$resultData = array();
 		$resultData["reportText"] = $this->getBasicReportText( $metaData["totalRecords"], $metaData["addedRecords"], $metaData["updatedRecords"] );
-		$resultData["unprocessedRecordsNumber"] = count( $metaData["errorMessages"] );
+		$resultData["unprocessedRecordsNumber"] = count( $metaData["errorMessages"] ?? [] );
 		$resultData["totalRecordsNumber"] = $metaData["totalRecords"] - $resultData["unprocessedRecordsNumber"];	
 			
 		// prepare a report file
@@ -640,7 +640,7 @@ class ImportPage extends RunnerPage
 		runner_save_file( $logFilePath, $reportFileText );
 		$resultData["logFilePath"] = $logFilePath;
 		
-		if( count( $metaData["unprocessedData"] ) )
+		if( count( $metaData["unprocessedData"] ?? [] ) )
 		{		
 			// prepare an unprocessed data log
 			$unprocFilePath = getabspath("templates_c/".$this->getUnprocessedDataFileName().".csv");
@@ -659,7 +659,7 @@ class ImportPage extends RunnerPage
 	protected function getImportDateFormat( $dateFormat )
 	{
 		global $locale_info;
-		return !strlen($dateFormat) ? $locale_info["LOCALE_SSHORTDATE"] : $dateFormat;
+		return !strlen((string)$dateFormat) ? $locale_info["LOCALE_SSHORTDATE"] : $dateFormat;
 	}
 	
 	/**
@@ -901,7 +901,7 @@ class ImportPage extends RunnerPage
 			{
 				$value = prepare_for_db( $field, $val, "time", "", $this->tName );
 
-				if ( strlen($value) > 0 )
+				if ( strlen((string)$value) > 0 )
 					$refinedFieldsValuesData[ $field ] = $value;
 				else
 					$refinedFieldsValuesData[ $field ] = NULL;				
@@ -915,7 +915,7 @@ class ImportPage extends RunnerPage
 				else
 					$value = $val;
 
-				if ( strlen($value) > 0 )
+				if ( strlen((string)$value) > 0 )
 					$refinedFieldsValuesData[ $field ] = $value;
 				else
 					$refinedFieldsValuesData[ $field ] = NULL;				
@@ -930,7 +930,7 @@ class ImportPage extends RunnerPage
 			
 			$value = str_replace(",", ".", (string)$val);
 			
-			if( strlen($value) > 0 )
+			if( strlen((string)$value) > 0 )
 			{
 				if( strpos($value, $locale_info["LOCALE_SCURRENCY"]) !== FALSE )
 				{
@@ -1230,7 +1230,7 @@ class ImportPage extends RunnerPage
 		$tmpText = "";
 		$j = 0;
 		$lines = array();
-		for($i=0;$i<strlen($importText);$i++)
+		for($i=0;$i<strlen((string)$importText);$i++)
 		{
 			$char = substr($importText,$i,1);
 			$charNext = substr($importText,$i+1,1);

@@ -88,7 +88,7 @@ class paramsLogger
 	 */
 	protected function assignCookieParams()
 	{
-		if( !strlen($_COOKIE["paramsLogger"]) && !$this->userID ) 
+		if( !strlen((string)$_COOKIE["paramsLogger"]) && !$this->userID ) 
 			setcookie("paramsLogger", generatePassword(24), time() + 5 * 365 * 86400);
 		
 		$this->cookie = $_COOKIE["paramsLogger"];
@@ -133,7 +133,7 @@ class paramsLogger
 	 */
 	public function save( $data, $addColumnsList = "", $addValuesList = "" )
 	{	
-		$issetData = strlen( $this->readData() ) != 0;
+		$issetData = strlen( (string)$this->readData() ) != 0;
 		if ( $issetData && $this->type != SSEARCH_PARAMS_TYPE )
 		{
 			$this->update( $data );
@@ -281,7 +281,7 @@ class paramsLogger
 		if( !isset( $data["SEARCH"] ) ) 
 			return false;
 
-		return $data["SEARCH"];
+		return $data["SEARCH"] ?? "";
 	}
 	
 	/**

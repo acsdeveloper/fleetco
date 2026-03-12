@@ -882,7 +882,7 @@ function my_strrpos($haystack, $needle)
 	$index = strpos(strrev($haystack), strrev($needle));
 	if($index === false)
 		return false;
-	$index = strlen($haystack) - strlen($needle) - $index;
+	$index = strlen((string)$haystack) - strlen((string)$needle) - $index;
 	return $index;
 }
 
@@ -916,9 +916,9 @@ function LogInfo($SQL)
  */
 function CheckImageExtension($filename)
 {
-	if(strlen($filename)<4)
+	if(strlen((string)$filename)<4)
 		return false;
-	$ext=strtoupper(substr($filename,strlen($filename)-4));
+	$ext=strtoupper(substr($filename,strlen((string)$filename)-4));
 	if($ext==".GIF" || $ext==".JPG" || $ext=="JPEG" || $ext==".PNG" || $ext==".BMP")
 		return $ext;
 	return false;
@@ -949,9 +949,9 @@ function html_special_decode($str)
  */
 function whereAdd($where,$clause)
 {
-	if(!strlen($clause))
+	if(!strlen((string)$clause))
 		return $where;
-	if(!strlen($where))
+	if(!strlen((string)$where))
 		return $clause;
 	return "(".$where.") and (".$clause.")";
 }
@@ -966,9 +966,9 @@ function combineSQLCriteria($arrElements, $and = true)
 	$union = $and ? " AND " : " OR ";
 	foreach($arrElements as $e)
 	{
-		if(strlen($e))
+		if(strlen((string)$e))
 		{
-			if(!strlen($ret))
+			if(!strlen((string)$ret))
 			{
 				$ret = "(".$e.")";
 			}
@@ -987,7 +987,7 @@ function combineSQLCriteria($arrElements, $and = true)
  */
 function AddWhere($sql,$where)
 {
-	if(!strlen($where))
+	if(!strlen((string)$where))
 		return $sql;
 	$sql=str_replace(array("\r\n","\n","\t")," ",$sql);
 	$tsql = strtolower($sql);
@@ -995,9 +995,9 @@ function AddWhere($sql,$where)
 	$n1 = my_strrpos($tsql," group by ");
 	$n2 = my_strrpos($tsql," order by ");
 	if($n1===false)
-		$n1=strlen($tsql);
+		$n1=strlen((string)$tsql);
 	if($n2===false)
-		$n2=strlen($tsql);
+		$n2=strlen((string)$tsql);
 	if ($n1>$n2)
 		$n1=$n2;
 	if($n===false)
@@ -1032,7 +1032,7 @@ function KeyWhere(&$keys, $table = "")
 	$keyFields = $pSet->getTableKeys();
 	foreach($keyFields as $kf)
 	{
-		if( strlen($strWhere) )
+		if( strlen((string)$strWhere) )
 			$strWhere.= " and ";
 
 		$value = $cipherer->MakeDBValue($kf, $keys[ $kf ], "", true);
@@ -1068,7 +1068,7 @@ function GetRowCount($strSQL, $connection)
 	{
 		$ind3 = strpos($tstr," ORDER BY ");
 		if($ind3 === false)
-			$ind3 = strlen($strSQL);
+			$ind3 = strlen((string)$strSQL);
 	}
 
 	$countstr = substr($strSQL, 0, $ind1 + 6)." count(*) ".substr($strSQL, $ind2 + 1, $ind3 -$ind2);
@@ -1119,7 +1119,7 @@ function AddRowNumber($strSQL, $n)
  */
 function applyDBrecordLimit($sql, $N, $dbType)
 {
-	if( !strlen($dbType) )
+	if( !strlen((string)$dbType) )
 		return $sql;
 
 	if( $dbType == nDATABASE_MySQL || $dbType == nDATABASE_PostgreSQL || $dbType == nDATABASE_SQLite3 )
@@ -1280,7 +1280,7 @@ function ReadUserPermissions($userID = "")
 {
 	global $gPermissionsRead, $gPermissionsRefreshTime, $caseInsensitiveUsername, $cman;
 
-	if (!strlen($userID))
+	if (!strlen((string)$userID))
 		$userID = $_SESSION["UserID"];
 
 	$needreload = false;
@@ -1347,7 +1347,7 @@ function ReadUserPermissions($userID = "")
 			$rights[ $data[0] ] = $data[1];
 			continue;
 		}
-		for($i = 0; $i < strlen($data[1]); $i++)
+		for($i = 0; $i < strlen((string)$data[1]); $i++)
 		{
 			if( strpos($rights[ $data[0] ], substr($data[1], $i, 1)) === false )
 				$rights[ $data[0] ].= substr($data[1], $i, 1);
@@ -1389,7 +1389,7 @@ function GetUserPermissionsDynamic($table="")
 			return "ADESPIM";
 	}
 
-	return @$_SESSION["UserRights"][$_SESSION["UserID"]][$table];
+	return (string)@$_SESSION["UserRights"][$_SESSION["UserID"]][$table];
 }
 
 // end of the bCreateLoginPage block
@@ -1627,7 +1627,7 @@ function SecuritySQL($strAction, $table="", $strPerm="")
 {
 	global $cAdvSecurityMethod,$strTableName;
 
-	if (!strlen($table))
+	if (!strlen((string)$table))
 		$table = $strTableName;
 
 	$pSet = new ProjectSettings($table);
@@ -1638,7 +1638,7 @@ function SecuritySQL($strAction, $table="", $strPerm="")
 		return "";
 
 	$ret="";
-	if(!strlen($strPerm))
+	if(!strlen((string)$strPerm))
 		$strPerm = GetUserPermissions($table);
 
 	if(strpos($strPerm,"M")===false)
@@ -1728,7 +1728,7 @@ function add_db_quotes($field, $value, $table = "", $type = null)
 			if ($type == 11)
 			{
 				$value = strtolower($value);
-				if (!strlen($value) || $value == 0 || $value == "0" || $value == "false" || $value == "f" || $value == "n" || $value == "no" || $value == "off")
+				if (!strlen((string)$value) || $value == 0 || $value == "0" || $value == "false" || $value == "f" || $value == "n" || $value == "no" || $value == "off")
 					$value = "f";
 				else
 					$value = "t";
@@ -1787,7 +1787,7 @@ function prepare_for_db($field, $value, $controltype = "", $postfilename = "", $
 	}
 	else if($controltype == "time" || IsTimeType($type))
 	{
-		if(!strlen($value))
+		if(!strlen((string)$value))
 			return "";
 
 		$time = localtime2db($value);
@@ -1861,7 +1861,7 @@ function DeleteUploadedFiles($pSet, $deleted_values)
 		if(($pSet->getEditFormat($field) == EDIT_FORMAT_FILE || $pSet->getPageTypeByFieldEditFormat($field, EDIT_FORMAT_FILE) != "")
 			&& $pSet->isDeleteAssociatedFile($field))
 		{
-			if(!strlen($value))
+			if(!strlen((string)$value))
 				return;
 
 			$filesArray = my_json_decode($value);
@@ -1901,7 +1901,7 @@ function combinevalues($arr)
 	foreach($arr as $item)
 	{
 		$val = $item;
-		if(strlen($ret))
+		if(strlen((string)$ret))
 			$ret.=",";
 		if(strpos($val,",")===false && strpos($val,'"')===false)
 			$ret.=$val;
@@ -1929,17 +1929,17 @@ function splitvalues($str)
 	$start=0;
 	$i=0;
 	$inquot=false;
-	while($i<=strlen($str))
+	while($i<=strlen((string)$str))
 	{
-		if($i<strlen($str) && substr($str,$i,1)=='"')
+		if($i<strlen((string)$str) && substr($str,$i,1)=='"')
 			$inquot=!$inquot;
-		else if($i==strlen($str) || !$inquot && substr($str,$i,1)==',')
+		else if($i==strlen((string)$str) || !$inquot && substr($str,$i,1)==',')
 		{
 			$val=substr($str,$start,$i-$start);
 			$start=$i+1;
-			if(strlen($val) && substr($val,0,1)=='"')
+			if(strlen((string)$val) && substr($val,0,1)=='"')
 			{
-				$val=substr($val,1,strlen($val)-2);
+				$val=substr($val,1,strlen((string)$val)-2);
 				$val=str_replace('""','"',$val);
 			}
 
@@ -2067,7 +2067,7 @@ function getValForTimePicker($type,$value,$locale)
  */
 function my_stripos($str,$needle, $offest)
 {
-	if (strlen($needle)==0 || strlen($str)==0)
+	if (strlen((string)$needle)==0 || strlen((string)$str)==0)
 		return false;
 	return strpos(strtolower($str),strtolower($needle), $offest);
 }
@@ -2080,7 +2080,7 @@ function my_str_ireplace($search, $replace,$str)
 	$pos=my_stripos($str,$search,0);
 	if($pos===false)
 		return $str;
-	return substr($str,0,$pos).$replace.substr($str,$pos+strlen($search));
+	return substr($str,0,$pos).$replace.substr($str,$pos+strlen((string)$search));
 }
 
 
@@ -2132,7 +2132,7 @@ function print_inline_array(&$arr,$printkey=false)
  */
 function checkpassword($pwd)
 {
-	$len = strlen($pwd);
+	$len = strlen((string)$pwd);
 	if($len < 8)
 		return false;
 	$cUnique = array();
@@ -2536,7 +2536,7 @@ function DoUpdateRecordSQL( $pageObject )
 		}
 		$strSQL .= $pageObject->getTableField($ekey)."=".$strValue.", ";
 	}
-	$strSQL = substr( $strSQL, 0, strlen($strSQL) - 2 );
+	$strSQL = substr( $strSQL, 0, strlen((string)$strSQL) - 2 );
 	if($strWhereClause === "")
 	{
 		$strWhereClause = " (1=1) ";
@@ -2581,10 +2581,10 @@ function DoInsertRecordSQL($table, &$avalues, &$blobfields, &$pageObject)
 	}
 
 	if( substr($strFields, -2) == ", " )
-		$strFields = substr($strFields, 0, strlen($strFields) - 2);
+		$strFields = substr($strFields, 0, strlen((string)$strFields) - 2);
 
 	if( substr($strValues, -2) == ", " )
-		$strValues = substr($strValues, 0, strlen($strValues) - 2);
+		$strValues = substr($strValues, 0, strlen((string)$strValues) - 2);
 
 	$strSQL.= $strFields.") values ".$strValues.")";
 
@@ -2630,10 +2630,10 @@ function DoInsertRecordSQLOnAdd( &$pageObject )
 	}
 
 	if( substr($strFields, -2) == ", ")
-		$strFields = substr($strFields, 0, strlen($strFields) - 2);
+		$strFields = substr($strFields, 0, strlen((string)$strFields) - 2);
 
 	if( substr($strValues, -2) == ", ")
-		$strValues = substr($strValues, 0, strlen($strValues) - 2);
+		$strValues = substr($strValues, 0, strlen((string)$strValues) - 2);
 
 	$strSQL.= $strFields.") values ".$strValues.")";
 
@@ -2680,14 +2680,14 @@ function add_nocache_headers()
 function IsGuidString(&$str)
 {
 //	{3F2504E0-4F89-11D3-9A0C-0305E82C3301}
-	if(strlen($str)==36 && substr($str,0,1)!="{" && substr($str,-1)!="}")
+	if(strlen((string)$str)==36 && substr($str,0,1)!="{" && substr($str,-1)!="}")
 		$str="{".$str."}";
-	elseif(strlen($str)==37 && substr($str,0,1)=="{" && substr($str,-1)!="}")
+	elseif(strlen((string)$str)==37 && substr($str,0,1)=="{" && substr($str,-1)!="}")
 		$str=$str."}";
-	elseif(strlen($str)==37 && substr($str,0,1)!="{" && substr($str,-1)=="}")
+	elseif(strlen((string)$str)==37 && substr($str,0,1)!="{" && substr($str,-1)=="}")
 		$str="{".$str;
 
-	if(strlen($str)!=38)
+	if(strlen((string)$str)!=38)
 		return false;
 	for($i=0;$i<38;$i++)
 	{
@@ -2721,7 +2721,7 @@ function IsGuidString(&$str)
  */
 function IsStoredProcedure($strSQL)
 {
-	if(strlen($strSQL)>6)
+	if(strlen((string)$strSQL)>6)
 	{
 		$c=strtolower(substr($strSQL,6,1));
 		if(strtolower(substr($strSQL,0,6))=="select" && ($c<'0' || $c>'9') && ($c<'a' || $c>'z') && $c!='_')
@@ -3262,7 +3262,7 @@ function getIconByFileType($fileType, $sourceFileName)
 		default:
 			$fileName = "text.png";
 			$dotPosition = strrpos($sourceFileName, '.');
-			if($dotPosition !== false && $dotPosition < strlen($sourceFileName) - 1)
+			if($dotPosition !== false && $dotPosition < strlen((string)$sourceFileName) - 1)
 			{
 				$ext = substr($sourceFileName, $dotPosition + 1);
 				$icons = array();
@@ -3411,7 +3411,7 @@ function import_error_handler($errno, $errstr, $errfile, $errline)
 }
 function PrepareForExcel($ret)
 {
-	//$ret = htmlspecialchars($str); commented for bug #6823
+	//$ret = htmlspecialchars((string)$str); commented for bug #6823
 	if (substr($ret,0,1)== "=")
 		$ret = "&#61;".substr($ret,1);
 	return $ret;
@@ -3514,7 +3514,7 @@ function getBingMapsLang()
 
 function getDefaultLanguage()
 {
-	if( strlen($_SESSION["language"]) == 0 && $_SERVER['HTTP_ACCEPT_LANGUAGE'] )
+	if( strlen((string)$_SESSION["language"]) == 0 && $_SERVER['HTTP_ACCEPT_LANGUAGE'] )
 	{
 		$arrWizardLang = array();
 		$arrWizardLang[] = "Afrikaans";
@@ -3735,7 +3735,7 @@ function printHomeLink( $params )
 function setProjectLogo( $html, $lng="" )
 {
 	global $globalSettings;
-	if(strlen($lng) == 0)
+	if(strlen((string)$lng) == 0)
 		$lng = getDefaultLanguage();
 	$globalSettings["ProjectLogo"][$lng] = $html;
 }
@@ -3743,7 +3743,7 @@ function setProjectLogo( $html, $lng="" )
 function getProjectLogo($lng="")
 {
 	global $globalSettings;
-	if(strlen($lng) == 0)
+	if(strlen((string)$lng) == 0)
 		$lng = getDefaultLanguage();
 	return $globalSettings["ProjectLogo"][$lng];
 }
@@ -3825,16 +3825,16 @@ function xt_buildeditcontrol(&$params)
 		$id = $params["id"];
 	
 	$validate = array();
-	if(count(@$params["validate"]))
-		$validate = @$params["validate"];
-	
+	if(count($params["validate"] ?? []))
+		$validate = $params["validate"];
+
 	$additionalCtrlParams = array();
-	if(count(@$params["additionalCtrlParams"]))
-		$additionalCtrlParams = @$params["additionalCtrlParams"];
-	
+	if(count($params["additionalCtrlParams"] ?? []))
+		$additionalCtrlParams = $params["additionalCtrlParams"];
+
 	$extraParams = array();
-	if( count(@$params["extraParams"]) )
-		$extraParams = @$params["extraParams"];	
+	if( count($params["extraParams"] ?? []) )
+		$extraParams = $params["extraParams"];	
 	
 	$pageObj->getControl($field, $id, $extraParams)->buildControl(@$params["value"], $mode, $fieldNum, $validate, $additionalCtrlParams, $data);
 }
