@@ -1298,22 +1298,30 @@ function ReadUserPermissions($userID = "")
 	
 	if($userID != "Guest")
 	{
+		// Resolve the user's role label from carrierusers.groupid.
+		// This ensures group membership is based on the assigned role,
+		// not the login username — so renaming a user never breaks their permissions.
+		$userGroupId = $userID;
+		$userSql = "select " . $gConn->addFieldWrappers("groupid")
+			. " from " . $gConn->addTableWrappers("carrierusers")
+			. " where " . $gConn->upper($gConn->addFieldWrappers("username"))
+			. "=" . $gConn->upper($gConn->prepareString($userID));
+		$userResult = $gConn->query($userSql);
+		if($userResult && $userData = $userResult->fetchAssoc())
+			$userGroupId = $userData["groupid"] ?? $userID;
 
-		if($caseInsensitiveUsername)
-			$usernameClause = $gConn->upper($gConn->addFieldWrappers( "UserName" )) . "=" . $gConn->upper( $gConn->prepareString($userID) );
-		else
-			$usernameClause = $gConn->addFieldWrappers( "UserName" ) . "=" . $gConn->prepareString($userID);
+		$roleClause = $gConn->upper($gConn->addFieldWrappers("UserName"))
+			. "=" . $gConn->upper($gConn->prepareString($userGroupId));
 
 		$sql = "select ".$gConn->addFieldWrappers( "GroupID" )
 			.", ".$gConn->addFieldWrappers( "UserName" )
 			." from ". $gConn->addTableWrappers( "carrier_ugmembers" )
-			." where " . $usernameClause;
+			." where " . $roleClause;
 
 		$qResult = $gConn->query( $sql );
 		while( $data = $qResult->fetchNumeric() )
 		{
-			if ( $caseInsensitiveUsername || strcmp($data[1],$userID) == 0 )
-				$groups[] = $data[0];
+			$groups[] = $data[0];
 		}
 
 		if( !count($groups) )

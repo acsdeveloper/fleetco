@@ -9,12 +9,11 @@ if( $useDompdf )
 {
 	require_once __DIR__ . '/../../vendor/autoload.php';
 
-	//form a unique name
+	// form a unique name
 	$tarr = explode(" ", microtime());
 	$outfileid = $tarr[1] . round($tarr[0] * 10);
-	$outfilename = GetTableURL() . $outfileid . ".pdf";
 
-	//process margins
+	// process margins
 	if( !$pagewidth || $pagewidth < 400 )
 		$pagewidth = 800;
 	$dpi = (int)($landscape ? $pagewidth * 25.4 / 297 : $pagewidth * 25.4 / 210);
@@ -28,9 +27,16 @@ if( $useDompdf )
 	$dompdf->setPaper('a4', $landscape ? 'landscape' : 'portrait');
 	$dompdf->render();
 
-	$streamOptions = ['Attachment' => false, 'pdfDownloadedEnd' => postvalue("rndval")];
-	$dompdf->stream($outfilename, $streamOptions);
-
+	// Save to templates_c/ so getpdf.php can serve it — streaming directly
+	// to the iframe prevents the JS redirect from ever executing.
+	$outfilepath = getabspath("templates_c/") . GetTableURL() . $outfileid . ".pdf";
+	file_put_contents($outfilepath, $dompdf->output());
+?><script>
+window.parent.Runner.Pdf.pdfbuilt = 1;
+window.parent.location.href = "getpdf.php?table=<?php echo GetTableURL();?>&id=<?php echo $outfileid;?>";
+</script>
+<div id="done"></div>
+<?php
 	exit();
 }	
 	

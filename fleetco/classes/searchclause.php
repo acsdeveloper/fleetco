@@ -1377,7 +1377,7 @@ class SearchClause extends SearchClauseBase
 				$pattern = '/^'.preg_quote($curSearchWord,"/").'/'.$flags;
 			}
 			
-			$isMatched = preg_match($pattern, $value, $matches);
+			$isMatched = preg_match($pattern, (string)($value ?? ''), $matches);
 			if( $isMatched && ( $searchOpt != 'Equals' ||  $value == $matches[0] ) ) 
 			{
 				//get the actual search word contained in the $value string
@@ -1406,7 +1406,7 @@ class SearchClause extends SearchClauseBase
 	{
 		$ret = array();
 		$matches = array();
-		if(preg_match_all('/(\"[^"]+\")|([^\s]+)/', $str, $matches))
+		if(preg_match_all('/(\"[^"]+\")|([^\s]+)/', (string)($str ?? ''), $matches))
 		{
 			foreach($matches[0] as $match)
 			{
